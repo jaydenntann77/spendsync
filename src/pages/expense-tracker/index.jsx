@@ -4,7 +4,7 @@ import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 import { useNavigate } from "react-router-dom";
 
-import "./styles.css";
+import "./ExpenseTracker.css";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
 
@@ -103,7 +103,11 @@ export const ExpenseTracker = () => {
                 </div>
                 {profilePhoto && (
                     <div className="profile">
-                        <img className="profile-photo" src={profilePhoto} />
+                        <img
+                            className="profile-photo"
+                            src={profilePhoto}
+                            alt="Profile"
+                        />
                         <button
                             className="sign-out-button"
                             onClick={signUserOut}
@@ -125,7 +129,7 @@ export const ExpenseTracker = () => {
                         } = transaction;
 
                         return (
-                            <li>
+                            <li key={transaction.id}>
                                 <h4> {description} </h4>
                                 <p>
                                     ${transactionAmount} |{" "}
