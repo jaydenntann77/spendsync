@@ -7,16 +7,24 @@ const Taskbar = () => {
         <div className="taskbar">
             <ul>
                 <li>
-                    <Link to="/">Dashboard</Link>
+                    <button className="link-button">
+                        <Link to="/expense-tracker">Dashboard</Link>
+                    </button>
                 </li>
                 <li>
-                    <Link to="/add-transaction">Add Transaction</Link>
+                    <button className="link-button">
+                        <Link to="/add-transaction">Add Transaction</Link>
+                    </button>
                 </li>
                 <li>
-                    <Link to="/groups">Groups</Link>
+                    <button className="link-button">
+                        <Link to="/groups">Groups</Link>
+                    </button>
                 </li>
                 <li>
-                    <Link to="/add-friends">Add Friends</Link>
+                    <button className="link-button">
+                        <Link to="/add-friends">Add Friends</Link>
+                    </button>
                 </li>
             </ul>
         </div>
