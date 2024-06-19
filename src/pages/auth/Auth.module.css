@@ -27,8 +27,8 @@
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 90%;
+    max-width: 90%;
+    width: 400px;
 }
 
 .loginContainer h1 {
@@ -66,8 +66,22 @@
 }
 
 /* Media query for larger screens */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     .loginContainer {
         width: 400px;
+        padding: 2.5rem;
+    }
+
+    .loginContainer h1 {
+        font-size: 2rem;
+    }
+
+    .loginContainer p {
+        font-size: 1.25rem;
+    }
+
+    .loginWithGoogleButton {
+        font-size: 1.25rem;
+        padding: 1rem 2rem;
     }
 }
