@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useAddTransaction } from "../../hooks/useAddTransaction";
 import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
+import { useDeleteTransaction } from "../../hooks/useDeleteTransaction";
 import { useNavigate } from "react-router-dom";
 
-import "./ExpenseTracker.css";
+import styles from "./ExpenseTracker.module.css";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
 
@@ -12,6 +13,7 @@ export const ExpenseTracker = () => {
     const { addTransaction } = useAddTransaction();
     const { transactions, transactionTotal } = useGetTransactions();
     const { name, profilePhoto } = useGetUserInfo();
+    const { deleteTransaction } = useDeleteTransaction();
     const navigate = useNavigate();
 
     const [description, setDescription] = useState("");
@@ -39,13 +41,17 @@ export const ExpenseTracker = () => {
         }
     };
 
+    const handleDelete = (transactionId) => {
+        deleteTransaction(transactionId);
+    };
+
     return (
         <>
-            <div className="expense-tracker">
-                <div className="container">
+            <div className={styles.expenseTracker}>
+                <div className={styles.container}>
                     <h1>{name}'s Expense Tracker</h1>
 
-                    <div className="balance">
+                    <div className={styles.balance}>
                         <h3>Your Balance</h3>
                         {balance >= 0 ? (
                             <h2>${balance}</h2>
@@ -54,17 +60,17 @@ export const ExpenseTracker = () => {
                         )}
                     </div>
 
-                    <div className="summary">
-                        <div className="income">
+                    <div className={styles.summary}>
+                        <div className={styles.income}>
                             <h4>Income</h4>
                             <p>${income}</p>
                         </div>
-                        <div className="expenses">
+                        <div className={styles.expenses}>
                             <h4>Expenses</h4>
                             <p>${expenses}</p>
                         </div>
                     </div>
-                    <form className="add-transaction" onSubmit={onSubmit}>
+                    <form className={styles.addTransaction} onSubmit={onSubmit}>
                         <input
                             type="text"
                             placeholder="Description"
@@ -81,73 +87,83 @@ export const ExpenseTracker = () => {
                                 setTransactionAmount(e.target.value)
                             }
                         />
-                        <input
-                            type="radio"
-                            id="expense"
-                            value="expense"
-                            checked={transactionType === "expense"}
-                            onChange={(e) => setTransactionType(e.target.value)}
-                        />
-                        <label htmlFor="expense">Expense</label>
-                        <input
-                            type="radio"
-                            id="income"
-                            value="income"
-                            checked={transactionType === "income"}
-                            onChange={(e) => setTransactionType(e.target.value)}
-                        />
-                        <label htmlFor="income">Income</label>
-
+                        <div>
+                            <input
+                                type="radio"
+                                id="expense"
+                                value="expense"
+                                checked={transactionType === "expense"}
+                                onChange={(e) =>
+                                    setTransactionType(e.target.value)
+                                }
+                            />
+                            <label htmlFor="expense">Expense</label>
+                            <input
+                                type="radio"
+                                id="income"
+                                value="income"
+                                checked={transactionType === "income"}
+                                onChange={(e) =>
+                                    setTransactionType(e.target.value)
+                                }
+                            />
+                            <label htmlFor="income">Income</label>
+                        </div>
                         <button type="submit">Add Transaction</button>
                     </form>
+                    {profilePhoto && (
+                        <div className={styles.profile}>
+                            <img
+                                className={styles.profilePhoto}
+                                src={profilePhoto}
+                                alt="Profile"
+                            />
+                            <button
+                                className={styles.signOutButton}
+                                onClick={signUserOut}
+                            >
+                                Sign Out
+                            </button>
+                        </div>
+                    )}
                 </div>
-                {profilePhoto && (
-                    <div className="profile">
-                        <img
-                            className="profile-photo"
-                            src={profilePhoto}
-                            alt="Profile"
-                        />
-                        <button
-                            className="sign-out-button"
-                            onClick={signUserOut}
-                        >
-                            Sign Out
-                        </button>
-                    </div>
-                )}
-            </div>
 
-            <div className="transactions">
-                <h3>Transactions</h3>
-                <ul>
-                    {transactions.map((transaction) => {
-                        const {
-                            description,
-                            transactionAmount,
-                            transactionType,
-                        } = transaction;
+                <div className={styles.transactions}>
+                    <h3>Transactions</h3>
+                    <ul>
+                        {transactions.map((transaction) => {
+                            const {
+                                id,
+                                description,
+                                transactionAmount,
+                                transactionType,
+                            } = transaction;
 
-                        return (
-                            <li key={transaction.id}>
-                                <h4> {description} </h4>
-                                <p>
-                                    ${transactionAmount} |{" "}
-                                    <label
-                                        style={{
-                                            color:
-                                                transactionType === "expense"
-                                                    ? "red"
-                                                    : "green",
-                                        }}
-                                    >
-                                        {transactionType}{" "}
-                                    </label>
-                                </p>
-                            </li>
-                        );
-                    })}
-                </ul>
+                            return (
+                                <li key={transaction.id}>
+                                    <h4>{description}</h4>
+                                    <p>
+                                        ${transactionAmount} |{" "}
+                                        <label
+                                            style={{
+                                                color:
+                                                    transactionType ===
+                                                    "expense"
+                                                        ? "red"
+                                                        : "green",
+                                            }}
+                                        >
+                                            {transactionType}{" "}
+                                        </label>
+                                    </p>
+                                    <button onClick={() => handleDelete(id)}>
+                                        Delete
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
             </div>
         </>
     );
