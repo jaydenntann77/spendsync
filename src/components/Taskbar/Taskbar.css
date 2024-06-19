@@ -1,0 +1,34 @@
+/* src/Taskbar.css */
+
+.taskbar {
+    width: 200px;
+    height: 100vh;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.taskbar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.taskbar li {
+    margin: 15px 0;
+}
+
+.taskbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.taskbar a:hover {
+    text-decoration: underline;
+}
