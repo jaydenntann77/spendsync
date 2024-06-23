@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "./Groups.module.css";
 import { useFetchUserGroups } from "../../hooks/useFetchUserGroups";
 import { useCreateGroup } from "../../hooks/useCreateGroup";
@@ -59,11 +60,12 @@ export const Groups = () => {
                 <ul>
                     {userGroups.map((group) => (
                         <li key={group.id}>
-                            <h3>{group.name}</h3>
-                            <p>{group.description}</p>
-                            <p>Members: {group.members.length}</p>
-                            <p>Group ID: {group.groupID}</p>{" "}
-                            {/* Display the Group ID */}
+                            <Link to={`/group/${group.id}`}>
+                                <h3>{group.name}</h3>
+                                <p>{group.description}</p>
+                                <p>Members: {group.members.length}</p>
+                                <p>Group ID: {group.groupID}</p>
+                            </Link>
                         </li>
                     ))}
                 </ul>

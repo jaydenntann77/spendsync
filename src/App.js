@@ -1,11 +1,12 @@
 import "./App.css";
-import Taskbar from "./components/Taskbar/Taskbar";
+import { Taskbar } from "./components/Taskbar/Taskbar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Auth } from "./pages/auth/index";
 import { AddFriends } from "./pages/add-friends/index";
 import { ExpenseTracker } from "./pages/expense-tracker/index";
 import { AddTransaction } from "./pages/add-transaction/index";
 import { Groups } from "./pages/groups/index";
+import { GroupDetails } from "./pages/group-details/index";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
 
 function App() {
@@ -34,6 +35,10 @@ function App() {
                                 element={<AddTransaction />}
                             />
                             <Route path="/groups" element={<Groups />} />
+                            <Route
+                                path="/group/:groupId"
+                                element={<GroupDetails />}
+                            />
                             <Route
                                 path="/add-friends"
                                 element={<AddFriends />}
