@@ -6,16 +6,19 @@ import { AddFriends } from "./pages/add-friends/index";
 import { ExpenseTracker } from "./pages/expense-tracker/index";
 import { AddTransaction } from "./pages/add-transaction/index";
 import { Groups } from "./pages/groups/index";
+import { useGetUserInfo } from "./hooks/useGetUserInfo";
 
 function App() {
+    const { isAuth } = useGetUserInfo();
+
     return (
         <div className="App">
             <Router>
                 <div style={{ display: "flex" }}>
-                    <Taskbar />
+                    {isAuth && <Taskbar />}
                     <div
                         style={{
-                            marginLeft: "200px",
+                            marginLeft: isAuth ? "200px" : "0",
                             padding: "20px",
                             width: "100%",
                         }}

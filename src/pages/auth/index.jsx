@@ -3,7 +3,6 @@ import { auth, provider } from "../../config/firebase-config";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
-
 import styles from "./Auth.module.css"; // Import the CSS module
 
 export const Auth = () => {
@@ -11,16 +10,20 @@ export const Auth = () => {
     const { isAuth } = useGetUserInfo();
 
     const signInWithGoogle = async () => {
-        const results = await signInWithPopup(auth, provider);
-        const authInfo = {
-            userID: results.user.uid,
-            name: results.user.displayName,
-            profilePhoto: results.user.photoURL,
-            isAuth: true,
-        };
-        console.log(results);
-        localStorage.setItem("auth", JSON.stringify(authInfo));
-        navigate("/expense-tracker");
+        try {
+            const results = await signInWithPopup(auth, provider);
+            const authInfo = {
+                userID: results.user.uid,
+                name: results.user.displayName,
+                profilePhoto: results.user.photoURL,
+                isAuth: true,
+            };
+            console.log(results);
+            localStorage.setItem("auth", JSON.stringify(authInfo));
+            navigate("/expense-tracker");
+        } catch (error) {
+            console.error("Error signing in with Google", error);
+        }
     };
 
     if (isAuth) {

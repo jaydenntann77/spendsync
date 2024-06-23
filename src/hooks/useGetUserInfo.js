@@ -1,9 +1,39 @@
+import { useState, useEffect } from "react";
+import { auth } from "../config/firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
+
 export const useGetUserInfo = () => {
-    // Get the item from localStorage
-    const auth = localStorage.getItem("auth");
+    const [userInfo, setUserInfo] = useState({
+        name: "",
+        profilePhoto: "",
+        userID: "",
+        isAuth: false,
+    });
 
-    // If the item exists, parse it; otherwise, use an empty object
-    const { name, profilePhoto, userID, isAuth } = auth ? JSON.parse(auth) : {};
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const authInfo = {
+                    userID: user.uid,
+                    name: user.displayName,
+                    profilePhoto: user.photoURL,
+                    isAuth: true,
+                };
+                localStorage.setItem("auth", JSON.stringify(authInfo));
+                setUserInfo(authInfo);
+            } else {
+                localStorage.removeItem("auth");
+                setUserInfo({
+                    name: "",
+                    profilePhoto: "",
+                    userID: "",
+                    isAuth: false,
+                });
+            }
+        });
 
-    return { name, profilePhoto, userID, isAuth };
+        return () => unsubscribe();
+    }, []);
+
+    return userInfo;
 };

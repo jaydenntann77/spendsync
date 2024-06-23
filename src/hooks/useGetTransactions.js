@@ -17,19 +17,21 @@ export const useGetTransactions = () => {
         expenses: 0.0,
     });
 
-    const transactionCollectionRef = collection(db, "transactions");
     const { userID } = useGetUserInfo();
 
-    const getTransactions = async () => {
-        let unsubscribe;
-        try {
+    useEffect(() => {
+        if (!userID) return; // Wait until userID is available
+
+        const transactionCollectionRef = collection(db, "transactions");
+
+        const getTransactions = async () => {
             const queryTransactions = query(
                 transactionCollectionRef,
                 where("userID", "==", userID),
                 orderBy("createdAt")
             );
 
-            unsubscribe = onSnapshot(queryTransactions, (snapshot) => {
+            const unsubscribe = onSnapshot(queryTransactions, (snapshot) => {
                 let docs = [];
                 let totalIncome = 0;
                 let totalExpenses = 0;
@@ -54,16 +56,12 @@ export const useGetTransactions = () => {
                     income: totalIncome,
                 });
             });
-        } catch (err) {
-            console.error(err);
-        }
 
-        return () => unsubscribe();
-    };
+            return () => unsubscribe();
+        };
 
-    useEffect(() => {
         getTransactions();
-    }, []);
+    }, [userID]); // Depend on userID
 
     return { transactions, transactionTotal };
 };

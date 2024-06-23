@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 import { useDeleteTransaction } from "../../hooks/useDeleteTransaction";
@@ -9,8 +8,8 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
 
 export const ExpenseTracker = () => {
-    const { transactions, transactionTotal } = useGetTransactions();
-    const { name, profilePhoto } = useGetUserInfo();
+    const { transactions } = useGetTransactions();
+    const { profilePhoto } = useGetUserInfo();
     const { deleteTransaction } = useDeleteTransaction();
     const navigate = useNavigate();
 
