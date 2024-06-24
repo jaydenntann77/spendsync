@@ -10,19 +10,35 @@
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
-    justify-content: space-between; /* Distributes space between children */
-}
-
-.taskbar ul {
+    transition: transform 0.3s ease;
+    transform: translateX(-100%); /* Hide the taskbar by default */
+  }
+  
+  .taskbar.open {
+    transform: translateX(0); /* Show the taskbar when open */
+  }
+  
+  .toggle-button {
+    position: absolute;
+    top: 20px;
+    left: 200px;
+    background-color: #444;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  ul {
     list-style-type: none;
     padding: 0;
-}
-
-.taskbar li {
+  }
+  
+  li {
     margin: 15px 0;
-}
-
-.link-button {
+  }
+  
+  .link-button {
     background-color: #444;
     border: none;
     padding: 10px 20px;
@@ -33,38 +49,40 @@
     border-radius: 5px;
     width: 100%;
     transition: background-color 0.3s;
-}
-
-.link-button a {
+  }
+  
+  .link-button a {
     color: white;
     text-decoration: none;
     display: block;
     width: 100%;
-}
-
-.link-button:hover {
+  }
+  
+  .link-button:hover {
     background-color: #555;
-}
-
-.link-button a:hover {
+  }
+  
+  .link-button a:hover {
     text-decoration: none;
-}
-
-.profile-section {
+  }
+  
+  .profile-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px;
-}
-
-.profile-photo {
+    margin-top: auto; /* Pushes the profile section to the bottom */
+    padding-bottom: 20px; /* Adds some space at the bottom */
+  }
+  
+  .profile-photo {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     margin-bottom: 10px;
-}
-
-.sign-out-button {
+  }
+  
+  .sign-out-button {
     background-color: #444;
     border: none;
     padding: 10px 20px;
@@ -75,9 +93,9 @@
     border-radius: 5px;
     width: 100%;
     transition: background-color 0.3s;
-}
-
-.profile-section {
-    margin-top: auto; /* Pushes the profile section to the bottom */
-    padding-bottom: 50px; /* Adds some space at the bottom */
-}
+  }
+  
+  .sign-out-button:hover {
+    background-color: #555;
+  }
+  

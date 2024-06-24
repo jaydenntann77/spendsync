@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
@@ -6,8 +6,10 @@ import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 import "./Taskbar.css";
 
 export const Taskbar = () => {
+    const [isOpen, setIsOpen] = useState(false);
     const { profilePhoto } = useGetUserInfo();
     const navigate = useNavigate();
+    const taskbarRef = useRef(null);
 
     const signUserOut = async () => {
         try {
@@ -19,8 +21,32 @@ export const Taskbar = () => {
         }
     };
 
+    const toggleTaskbar = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleClickOutside = (event) => {
+        if (taskbarRef.current && !taskbarRef.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen]);
+
     return (
-        <div className="taskbar">
+        <div ref={taskbarRef} className={`taskbar ${isOpen ? "open" : ""}`}>
+            <div className="toggle-button" onClick={toggleTaskbar}>
+                {isOpen ? "Close" : "Open"}
+            </div>
             <ul>
                 <li>
                     <button className="link-button">

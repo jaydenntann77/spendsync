@@ -1,22 +1,38 @@
 .groupDetails {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .groupDetails h1 {
-    font-size: 2em;
-    margin-bottom: 10px;
-  }
-  
-  .groupDetails p {
-    font-size: 1.2em;
-    margin: 5px 0;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.groupDetails h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.groupDetails p {
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+.backButton {
+  align-self: flex-start;
+  background-color: #444;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s;
+}
+
+.backButton:hover {
+  background-color: #555;
+}

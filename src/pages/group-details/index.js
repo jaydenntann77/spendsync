@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import styles from "./GroupDetails.module.css";
 
 export const GroupDetails = () => {
-    const { groupId } = useParams();
+    const { groupId } = useParams(); // Extract the groupId from the URL
     const [group, setGroup] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchGroupDetails = async () => {
@@ -39,6 +40,12 @@ export const GroupDetails = () => {
 
     return (
         <div className={styles.groupDetails}>
+            <button
+                className={styles.backButton}
+                onClick={() => navigate("/groups")}
+            >
+                Back to Groups
+            </button>
             <h1>{group.name}</h1>
             <p>{group.description}</p>
             <p>Members: {group.members.length}</p>

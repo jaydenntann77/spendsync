@@ -6,8 +6,8 @@ import { AddFriends } from "./pages/add-friends/index";
 import { ExpenseTracker } from "./pages/expense-tracker/index";
 import { AddTransaction } from "./pages/add-transaction/index";
 import { Groups } from "./pages/groups/index";
-import { GroupDetails } from "./pages/group-details/index";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
+import { GroupDetails } from "./pages/group-details";
 
 function App() {
     const { isAuth } = useGetUserInfo();
