@@ -3,6 +3,8 @@ import { auth, provider } from "../../config/firebase-config";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../config/firebase-config";
 import styles from "./Auth.module.css"; // Import the CSS module
 
 export const Auth = () => {
@@ -19,6 +21,14 @@ export const Auth = () => {
                 isAuth: true,
             };
             console.log(results);
+
+            // Save user info to Firestore
+            await setDoc(doc(db, "users", results.user.uid), {
+                userID: results.user.uid,
+                name: results.user.displayName,
+                profilePhoto: results.user.photoURL,
+            });
+
             localStorage.setItem("auth", JSON.stringify(authInfo));
             navigate("/expense-tracker");
         } catch (error) {

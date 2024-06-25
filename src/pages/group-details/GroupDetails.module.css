@@ -10,7 +10,7 @@
   margin: 0 auto;
 }
 
-.groupDetails h1 {
+.groupDetails h1, .groupDetails h2 {
   font-size: 2em;
   margin-bottom: 10px;
 }
@@ -35,4 +35,57 @@
 
 .backButton:hover {
   background-color: #555;
+}
+
+.membersList {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.membersList li {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.expenseForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formGroup label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 10px;
+  font-size: 1em;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.expensesList {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.expensesList li {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
