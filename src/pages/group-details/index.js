@@ -19,7 +19,6 @@ export const GroupDetails = () => {
     const [error, setError] = useState(null);
     const [expenses, setExpenses] = useState([]);
     const [membersDetails, setMembersDetails] = useState([]);
-    const [balances, setBalances] = useState([]);
     const [amount, setAmount] = useState("");
     const [paidBy, setPaidBy] = useState("");
     const [involvedMembers, setInvolvedMembers] = useState([]);
@@ -75,20 +74,6 @@ export const GroupDetails = () => {
         }
     }, [groupId]);
 
-    const fetchBalances = useCallback(async () => {
-        try {
-            const balancesRef = collection(db, "groups", groupId, "balances");
-            const balancesSnapshot = await getDocs(balancesRef);
-            const balancesList = balancesSnapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
-            setBalances(balancesList);
-        } catch (err) {
-            console.error("Error fetching balances:", err);
-        }
-    }, [groupId]);
-
     useEffect(() => {
         fetchGroupDetails();
     }, [fetchGroupDetails]);
@@ -99,8 +84,7 @@ export const GroupDetails = () => {
 
     useEffect(() => {
         fetchExpenses();
-        fetchBalances();
-    }, [fetchExpenses, fetchBalances]);
+    }, [fetchExpenses]);
 
     const handleAddExpense = async (e) => {
         e.preventDefault();
@@ -180,7 +164,6 @@ export const GroupDetails = () => {
 
             // Fetch updated expenses and balances
             fetchExpenses();
-            fetchBalances();
             setRefreshKey((prevKey) => prevKey + 1); // Update refreshKey to trigger balances update
         } catch (err) {
             console.error("Error adding expense:", err);
