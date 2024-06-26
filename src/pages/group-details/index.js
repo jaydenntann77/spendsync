@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
     doc,
@@ -6,8 +6,7 @@ import {
     collection,
     addDoc,
     getDocs,
-    setDoc,
-    updateDoc,
+    runTransaction,
 } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import Select from "react-select";
@@ -20,80 +19,88 @@ export const GroupDetails = () => {
     const [error, setError] = useState(null);
     const [expenses, setExpenses] = useState([]);
     const [membersDetails, setMembersDetails] = useState([]);
+    const [balances, setBalances] = useState([]);
     const [amount, setAmount] = useState("");
     const [paidBy, setPaidBy] = useState("");
     const [involvedMembers, setInvolvedMembers] = useState([]);
     const [splitType, setSplitType] = useState("equal");
+    const [refreshKey, setRefreshKey] = useState(0);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchGroupDetails = async () => {
-            try {
-                const groupRef = doc(db, "groups", groupId);
-                const groupDoc = await getDoc(groupRef);
-                if (groupDoc.exists()) {
-                    setGroup(groupDoc.data());
-                } else {
-                    console.error("Group not found");
-                    setError("Group not found");
-                }
-            } catch (err) {
-                console.error("Error fetching group details:", err);
-                setError("Error fetching group details");
+    const fetchGroupDetails = useCallback(async () => {
+        try {
+            const groupRef = doc(db, "groups", groupId);
+            const groupDoc = await getDoc(groupRef);
+            if (groupDoc.exists()) {
+                setGroup(groupDoc.data());
+            } else {
+                console.error("Group not found");
+                setError("Group not found");
             }
-        };
-
-        fetchGroupDetails();
+        } catch (err) {
+            console.error("Error fetching group details:", err);
+            setError("Error fetching group details");
+        }
     }, [groupId]);
 
-    useEffect(() => {
+    const fetchMembersDetails = useCallback(async () => {
         if (group && group.members) {
-            const fetchMembersDetails = async () => {
-                try {
-                    const memberPromises = group.members.map(
-                        async (memberId) => {
-                            const userRef = doc(db, "users", memberId);
-                            const userDoc = await getDoc(userRef);
-                            return userDoc.exists()
-                                ? { id: memberId, ...userDoc.data() }
-                                : null;
-                        }
-                    );
-                    const members = await Promise.all(memberPromises);
-                    setMembersDetails(
-                        members.filter((member) => member !== null)
-                    );
-                } catch (err) {
-                    console.error("Error fetching member details:", err);
-                }
-            };
-
-            fetchMembersDetails();
+            try {
+                const memberPromises = group.members.map(async (memberId) => {
+                    const userRef = doc(db, "users", memberId);
+                    const userDoc = await getDoc(userRef);
+                    return userDoc.exists()
+                        ? { id: memberId, ...userDoc.data() }
+                        : null;
+                });
+                const members = await Promise.all(memberPromises);
+                setMembersDetails(members.filter((member) => member !== null));
+            } catch (err) {
+                console.error("Error fetching member details:", err);
+            }
         }
     }, [group]);
 
-    useEffect(() => {
-        const fetchExpenses = async () => {
-            try {
-                const expensesRef = collection(
-                    db,
-                    "groups",
-                    groupId,
-                    "expenses"
-                );
-                const expensesSnapshot = await getDocs(expensesRef);
-                const expensesList = expensesSnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setExpenses(expensesList);
-            } catch (err) {
-                console.error("Error fetching expenses:", err);
-            }
-        };
-
-        fetchExpenses();
+    const fetchExpenses = useCallback(async () => {
+        try {
+            const expensesRef = collection(db, "groups", groupId, "expenses");
+            const expensesSnapshot = await getDocs(expensesRef);
+            const expensesList = expensesSnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            setExpenses(expensesList);
+        } catch (err) {
+            console.error("Error fetching expenses:", err);
+        }
     }, [groupId]);
+
+    const fetchBalances = useCallback(async () => {
+        try {
+            const balancesRef = collection(db, "groups", groupId, "balances");
+            const balancesSnapshot = await getDocs(balancesRef);
+            const balancesList = balancesSnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            setBalances(balancesList);
+        } catch (err) {
+            console.error("Error fetching balances:", err);
+        }
+    }, [groupId]);
+
+    useEffect(() => {
+        fetchGroupDetails();
+    }, [fetchGroupDetails]);
+
+    useEffect(() => {
+        fetchMembersDetails();
+    }, [fetchMembersDetails]);
+
+    useEffect(() => {
+        fetchExpenses();
+        fetchBalances();
+    }, [fetchExpenses, fetchBalances]);
 
     const handleAddExpense = async (e) => {
         e.preventDefault();
@@ -101,50 +108,80 @@ export const GroupDetails = () => {
         const splitAmount = parseFloat(amount) / members.length;
 
         try {
-            const expensesRef = collection(db, "groups", groupId, "expenses");
-            await addDoc(expensesRef, {
-                amount: parseFloat(amount),
-                paidBy,
-                involvedMembers: members,
-                splitType,
-                date: new Date(),
-            });
+            await runTransaction(db, async (transaction) => {
+                const expensesRef = collection(
+                    db,
+                    "groups",
+                    groupId,
+                    "expenses"
+                );
+                await addDoc(expensesRef, {
+                    amount: parseFloat(amount),
+                    paidBy,
+                    involvedMembers: members,
+                    splitType,
+                    date: new Date(),
+                });
 
-            // Update balances
-            const balancesRef = collection(db, "groups", groupId, "balances");
-            for (const member of members) {
-                if (member !== paidBy) {
-                    const balanceDocRef = doc(
-                        balancesRef,
-                        `${paidBy}_${member}`
-                    );
-                    const balanceDoc = await getDoc(balanceDocRef);
+                // Update balances
+                const balancesRef = collection(
+                    db,
+                    "groups",
+                    groupId,
+                    "balances"
+                );
+                for (const member of members) {
+                    if (member !== paidBy) {
+                        const balanceDocRef = doc(
+                            balancesRef,
+                            `${paidBy}_${member}`
+                        );
+                        const reverseBalanceDocRef = doc(
+                            balancesRef,
+                            `${member}_${paidBy}`
+                        );
+                        // Update balance from member to paidBy
+                        const balanceDoc = await transaction.get(balanceDocRef);
+                        const reverseBalanceDoc = await transaction.get(
+                            reverseBalanceDocRef
+                        );
 
-                    if (balanceDoc.exists()) {
-                        await updateDoc(balanceDocRef, {
-                            amount: balanceDoc.data().amount + splitAmount,
-                        });
-                    } else {
-                        await setDoc(balanceDocRef, {
+                        let balanceAmount = -splitAmount;
+                        let reverseBalanceAmount = splitAmount;
+
+                        if (balanceDoc.exists()) {
+                            balanceAmount += balanceDoc.data().amount;
+                        }
+
+                        if (reverseBalanceDoc.exists()) {
+                            reverseBalanceAmount +=
+                                reverseBalanceDoc.data().amount;
+                        }
+
+                        transaction.set(balanceDocRef, {
                             from: paidBy,
                             to: member,
-                            amount: splitAmount,
+                            amount: balanceAmount,
+                        });
+
+                        transaction.set(reverseBalanceDocRef, {
+                            from: member,
+                            to: paidBy,
+                            amount: reverseBalanceAmount,
                         });
                     }
                 }
-            }
+            });
 
             setAmount("");
             setPaidBy("");
             setInvolvedMembers([]);
             setSplitType("equal");
-            // Fetch updated expenses
-            const expensesSnapshot = await getDocs(expensesRef);
-            const expensesList = expensesSnapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
-            setExpenses(expensesList);
+
+            // Fetch updated expenses and balances
+            fetchExpenses();
+            fetchBalances();
+            setRefreshKey((prevKey) => prevKey + 1); // Update refreshKey to trigger balances update
         } catch (err) {
             console.error("Error adding expense:", err);
         }
@@ -255,7 +292,7 @@ export const GroupDetails = () => {
                 ))}
             </ul>
 
-            <GroupBalances groupId={groupId} />
+            <GroupBalances groupId={groupId} refreshBalances={refreshKey} />
         </div>
     );
 };

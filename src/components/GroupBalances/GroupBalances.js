@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
-import "./GroupBalances.css";
+import styles from "./GroupBalances.module.css";
 
-export const GroupBalances = ({ groupId }) => {
+export const GroupBalances = ({ groupId, refreshBalances }) => {
     const [balances, setBalances] = useState([]);
 
     useEffect(() => {
@@ -27,18 +27,18 @@ export const GroupBalances = ({ groupId }) => {
         };
 
         fetchBalances();
-    }, [groupId]);
+    }, [groupId, refreshBalances]);
+
+    const filteredBalances = balances.filter((balance) => balance.amount > 0);
 
     return (
-        <div className="group-balances">
+        <div className={styles.balances}>
             <h2>Group Balances</h2>
             <ul>
-                {balances.map((balance) => (
+                {filteredBalances.map((balance) => (
                     <li key={balance.id}>
-                        <p>
-                            {balance.from} owes {balance.to} $
-                            {balance.amount.toFixed(2)}
-                        </p>
+                        {balance.from} owes {balance.to} $
+                        {balance.amount.toFixed(2)}
                     </li>
                 ))}
             </ul>
