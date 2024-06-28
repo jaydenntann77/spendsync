@@ -99,21 +99,17 @@ export const GroupDetails = () => {
                     groupId,
                     "expenses"
                 );
-                await addDoc(expensesRef, {
-                    amount: parseFloat(amount),
-                    paidBy,
-                    involvedMembers: members,
-                    splitType,
-                    date: new Date(),
-                });
 
-                // Update balances
+                // Read all balances before performing any writes
                 const balancesRef = collection(
                     db,
                     "groups",
                     groupId,
                     "balances"
                 );
+                const balanceDocs = {};
+                const reverseBalanceDocs = {};
+
                 for (const member of members) {
                     if (member !== paidBy) {
                         const balanceDocRef = doc(
@@ -124,33 +120,56 @@ export const GroupDetails = () => {
                             balancesRef,
                             `${member}_${paidBy}`
                         );
-                        // Update balance from member to paidBy
-                        const balanceDoc = await transaction.get(balanceDocRef);
-                        const reverseBalanceDoc = await transaction.get(
+                        balanceDocs[member] = await transaction.get(
+                            balanceDocRef
+                        );
+                        reverseBalanceDocs[member] = await transaction.get(
                             reverseBalanceDocRef
                         );
+                    }
+                }
 
-                        let balanceAmount = -splitAmount;
-                        let reverseBalanceAmount = splitAmount;
+                // Perform writes after all reads
+                await addDoc(expensesRef, {
+                    amount: parseFloat(amount),
+                    paidBy,
+                    involvedMembers: members,
+                    splitType,
+                    date: new Date(),
+                });
 
-                        if (balanceDoc.exists()) {
-                            balanceAmount += balanceDoc.data().amount;
+                for (const member of members) {
+                    if (member !== paidBy) {
+                        const balanceDocRef = doc(
+                            balancesRef,
+                            `${paidBy}_${member}`
+                        );
+                        const reverseBalanceDocRef = doc(
+                            balancesRef,
+                            `${member}_${paidBy}`
+                        );
+
+                        let balanceAmount = splitAmount;
+                        let reverseBalanceAmount = -splitAmount;
+
+                        if (balanceDocs[member].exists()) {
+                            balanceAmount += balanceDocs[member].data().amount;
                         }
 
-                        if (reverseBalanceDoc.exists()) {
+                        if (reverseBalanceDocs[member].exists()) {
                             reverseBalanceAmount +=
-                                reverseBalanceDoc.data().amount;
+                                reverseBalanceDocs[member].data().amount;
                         }
 
                         transaction.set(balanceDocRef, {
-                            from: paidBy,
-                            to: member,
+                            from: member,
+                            to: paidBy,
                             amount: balanceAmount,
                         });
 
                         transaction.set(reverseBalanceDocRef, {
-                            from: member,
-                            to: paidBy,
+                            from: paidBy,
+                            to: member,
                             amount: reverseBalanceAmount,
                         });
                     }
