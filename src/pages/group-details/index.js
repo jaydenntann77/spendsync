@@ -1,24 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-    doc,
-    getDoc,
-    collection,
-    addDoc,
-    getDocs,
-    runTransaction,
-} from "firebase/firestore";
-import { db } from "../../config/firebase-config";
+import { useFetchGroupDetails } from "../../hooks/useFetchGroupDetails";
+import { useFetchMembersDetails } from "../../hooks/useFetchMembersDetails";
+import { useFetchExpenses } from "../../hooks/useFetchExpenses";
+import { useHandleAddExpense } from "../../hooks/useHandleAddExpense";
 import Select from "react-select";
 import styles from "./GroupDetails.module.css";
 import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
 
 export const GroupDetails = () => {
     const { groupId } = useParams();
-    const [group, setGroup] = useState(null);
-    const [error, setError] = useState(null);
-    const [expenses, setExpenses] = useState([]);
-    const [membersDetails, setMembersDetails] = useState([]);
     const [amount, setAmount] = useState("");
     const [paidBy, setPaidBy] = useState("");
     const [involvedMembers, setInvolvedMembers] = useState([]);
@@ -26,168 +17,18 @@ export const GroupDetails = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const navigate = useNavigate();
 
-    const fetchGroupDetails = useCallback(async () => {
-        try {
-            const groupRef = doc(db, "groups", groupId);
-            const groupDoc = await getDoc(groupRef);
-            if (groupDoc.exists()) {
-                setGroup(groupDoc.data());
-            } else {
-                console.error("Group not found");
-                setError("Group not found");
-            }
-        } catch (err) {
-            console.error("Error fetching group details:", err);
-            setError("Error fetching group details");
-        }
-    }, [groupId]);
-
-    const fetchMembersDetails = useCallback(async () => {
-        if (group && group.members) {
-            try {
-                const memberPromises = group.members.map(async (memberId) => {
-                    const userRef = doc(db, "users", memberId);
-                    const userDoc = await getDoc(userRef);
-                    return userDoc.exists()
-                        ? { id: memberId, ...userDoc.data() }
-                        : null;
-                });
-                const members = await Promise.all(memberPromises);
-                setMembersDetails(members.filter((member) => member !== null));
-            } catch (err) {
-                console.error("Error fetching member details:", err);
-            }
-        }
-    }, [group]);
-
-    const fetchExpenses = useCallback(async () => {
-        try {
-            const expensesRef = collection(db, "groups", groupId, "expenses");
-            const expensesSnapshot = await getDocs(expensesRef);
-            const expensesList = expensesSnapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
-            setExpenses(expensesList);
-        } catch (err) {
-            console.error("Error fetching expenses:", err);
-        }
-    }, [groupId]);
-
-    useEffect(() => {
-        fetchGroupDetails();
-    }, [fetchGroupDetails]);
-
-    useEffect(() => {
-        fetchMembersDetails();
-    }, [fetchMembersDetails]);
-
-    useEffect(() => {
-        fetchExpenses();
-    }, [fetchExpenses]);
-
-    const handleAddExpense = async (e) => {
-        e.preventDefault();
-        const members = involvedMembers.map((member) => member.value);
-        const splitAmount = parseFloat(amount) / members.length;
-
-        try {
-            await runTransaction(db, async (transaction) => {
-                const expensesRef = collection(
-                    db,
-                    "groups",
-                    groupId,
-                    "expenses"
-                );
-
-                // Read all balances before performing any writes
-                const balancesRef = collection(
-                    db,
-                    "groups",
-                    groupId,
-                    "balances"
-                );
-                const balanceDocs = {};
-                const reverseBalanceDocs = {};
-
-                for (const member of members) {
-                    if (member !== paidBy) {
-                        const balanceDocRef = doc(
-                            balancesRef,
-                            `${paidBy}_${member}`
-                        );
-                        const reverseBalanceDocRef = doc(
-                            balancesRef,
-                            `${member}_${paidBy}`
-                        );
-                        balanceDocs[member] = await transaction.get(
-                            balanceDocRef
-                        );
-                        reverseBalanceDocs[member] = await transaction.get(
-                            reverseBalanceDocRef
-                        );
-                    }
-                }
-
-                // Perform writes after all reads
-                await addDoc(expensesRef, {
-                    amount: parseFloat(amount),
-                    paidBy,
-                    involvedMembers: members,
-                    splitType,
-                    date: new Date(),
-                });
-
-                for (const member of members) {
-                    if (member !== paidBy) {
-                        const balanceDocRef = doc(
-                            balancesRef,
-                            `${paidBy}_${member}`
-                        );
-                        const reverseBalanceDocRef = doc(
-                            balancesRef,
-                            `${member}_${paidBy}`
-                        );
-
-                        let balanceAmount = splitAmount;
-                        let reverseBalanceAmount = -splitAmount;
-
-                        if (balanceDocs[member].exists()) {
-                            balanceAmount += balanceDocs[member].data().amount;
-                        }
-
-                        if (reverseBalanceDocs[member].exists()) {
-                            reverseBalanceAmount +=
-                                reverseBalanceDocs[member].data().amount;
-                        }
-
-                        transaction.set(balanceDocRef, {
-                            from: member,
-                            to: paidBy,
-                            amount: balanceAmount,
-                        });
-
-                        transaction.set(reverseBalanceDocRef, {
-                            from: paidBy,
-                            to: member,
-                            amount: reverseBalanceAmount,
-                        });
-                    }
-                }
-            });
-
-            setAmount("");
-            setPaidBy("");
-            setInvolvedMembers([]);
-            setSplitType("equal");
-
-            // Fetch updated expenses and balances
-            fetchExpenses();
-            setRefreshKey((prevKey) => prevKey + 1); // Update refreshKey to trigger balances update
-        } catch (err) {
-            console.error("Error adding expense:", err);
-        }
-    };
+    const { group, error } = useFetchGroupDetails(groupId);
+    const membersDetails = useFetchMembersDetails(group);
+    const { expenses, fetchExpenses } = useFetchExpenses(groupId);
+    const handleAddExpense = useHandleAddExpense(
+        groupId,
+        fetchExpenses,
+        setRefreshKey,
+        setAmount,
+        setPaidBy,
+        setInvolvedMembers,
+        setSplitType
+    );
 
     if (error) {
         return <div>{error}</div>;
@@ -223,7 +64,18 @@ export const GroupDetails = () => {
             </ul>
 
             <h2>Add an Expense</h2>
-            <form onSubmit={handleAddExpense} className={styles.expenseForm}>
+            <form
+                onSubmit={(e) =>
+                    handleAddExpense(
+                        e,
+                        amount,
+                        paidBy,
+                        involvedMembers,
+                        splitType
+                    )
+                }
+                className={styles.expenseForm}
+            >
                 <div className={styles.formGroup}>
                     <label>Amount:</label>
                     <input
