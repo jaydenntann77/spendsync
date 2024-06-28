@@ -7,6 +7,7 @@ import { useHandleAddExpense } from "../../hooks/useHandleAddExpense";
 import Select from "react-select";
 import styles from "./GroupDetails.module.css";
 import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
+import { useHandleDeleteExpense } from "../../hooks/useHandleDeleteExpense";
 
 export const GroupDetails = () => {
     const { groupId } = useParams();
@@ -28,6 +29,11 @@ export const GroupDetails = () => {
         setPaidBy,
         setInvolvedMembers,
         setSplitType
+    );
+    const handleDeleteExpense = useHandleDeleteExpense(
+        groupId,
+        fetchExpenses,
+        setRefreshKey
     );
 
     if (error) {
@@ -142,6 +148,18 @@ export const GroupDetails = () => {
                                 expense.date.seconds * 1000
                             ).toLocaleDateString()}
                         </p>
+                        <button
+                            onClick={() =>
+                                handleDeleteExpense(
+                                    expense.id,
+                                    expense.involvedMembers,
+                                    expense.paidBy,
+                                    expense.amount
+                                )
+                            }
+                        >
+                            Delete
+                        </button>
                     </li>
                 ))}
             </ul>
