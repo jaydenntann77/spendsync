@@ -8,6 +8,7 @@ import { AddTransaction } from "./pages/add-transaction/index";
 import { Groups } from "./pages/groups/index";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
 import { GroupDetails } from "./pages/group-details";
+import { AddCategory } from "./pages/add-category/AddCategory";
 
 function App() {
     const { isAuth } = useGetUserInfo();
@@ -33,6 +34,10 @@ function App() {
                             <Route
                                 path="/add-transaction"
                                 element={<AddTransaction />}
+                            />
+                            <Route
+                                path="/add-category"
+                                element={<AddCategory />}
                             />
                             <Route path="/groups" element={<Groups />} />
                             <Route
