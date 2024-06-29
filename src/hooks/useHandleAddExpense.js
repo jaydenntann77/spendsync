@@ -9,13 +9,13 @@ export const useHandleAddExpense = (
     setAmount,
     setPaidBy,
     setInvolvedMembers,
-    setSplitType
+    setSplitType,
+    setManualSplits
 ) => {
     const handleAddExpense = useCallback(
-        async (e, amount, paidBy, involvedMembers, splitType) => {
+        async (e, amount, paidBy, involvedMembers, splitType, manualSplits) => {
             e.preventDefault();
             const members = involvedMembers.map((member) => member.value);
-            const splitAmount = parseFloat(amount) / members.length;
 
             try {
                 await runTransaction(db, async (transaction) => {
@@ -75,8 +75,11 @@ export const useHandleAddExpense = (
                                 `${member}_${paidBy}`
                             );
 
-                            let balanceAmount = splitAmount;
-                            let reverseBalanceAmount = -splitAmount;
+                            let balanceAmount =
+                                splitType === "manual"
+                                    ? parseFloat(manualSplits[member])
+                                    : parseFloat(amount) / members.length;
+                            let reverseBalanceAmount = -balanceAmount;
 
                             if (balanceDocs[member].exists()) {
                                 balanceAmount +=
@@ -108,6 +111,7 @@ export const useHandleAddExpense = (
                 setPaidBy("");
                 setInvolvedMembers([]);
                 setSplitType("equal");
+                setManualSplits({});
 
                 // Fetch updated expenses and balances
                 fetchExpenses();
@@ -124,6 +128,7 @@ export const useHandleAddExpense = (
             setPaidBy,
             setInvolvedMembers,
             setSplitType,
+            setManualSplits,
         ]
     );
 

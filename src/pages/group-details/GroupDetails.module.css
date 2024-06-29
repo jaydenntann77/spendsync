@@ -1,13 +1,26 @@
+
+
 .groupDetails {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #ffecd2, #fcb69f);
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f9f9f9;
-  padding: 20px;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.container {
+  background-color: white;
+  padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 600px;
-  margin: 0 auto;
+  width: 100%;
+  margin-bottom: 2rem;
 }
 
 .groupDetails h1, .groupDetails h2 {

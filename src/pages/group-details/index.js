@@ -4,10 +4,10 @@ import { useFetchGroupDetails } from "../../hooks/useFetchGroupDetails";
 import { useFetchMembersDetails } from "../../hooks/useFetchMembersDetails";
 import { useFetchExpenses } from "../../hooks/useFetchExpenses";
 import { useHandleAddExpense } from "../../hooks/useHandleAddExpense";
+import { useHandleDeleteExpense } from "../../hooks/useHandleDeleteExpense";
 import Select from "react-select";
 import styles from "./GroupDetails.module.css";
 import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
-import { useHandleDeleteExpense } from "../../hooks/useHandleDeleteExpense";
 
 export const GroupDetails = () => {
     const { groupId } = useParams();
@@ -15,6 +15,7 @@ export const GroupDetails = () => {
     const [paidBy, setPaidBy] = useState("");
     const [involvedMembers, setInvolvedMembers] = useState([]);
     const [splitType, setSplitType] = useState("equal");
+    const [manualSplits, setManualSplits] = useState({});
     const [refreshKey, setRefreshKey] = useState(0);
     const navigate = useNavigate();
 
@@ -28,8 +29,16 @@ export const GroupDetails = () => {
         setAmount,
         setPaidBy,
         setInvolvedMembers,
-        setSplitType
+        setSplitType,
+        setManualSplits
     );
+
+    const handleManualSplitChange = (memberId, value) => {
+        setManualSplits((prev) => ({
+            ...prev,
+            [memberId]: value,
+        }));
+    };
     const handleDeleteExpense = useHandleDeleteExpense(
         groupId,
         fetchExpenses,
@@ -57,114 +66,144 @@ export const GroupDetails = () => {
             >
                 Back to Groups
             </button>
-            <h1>{group.name}</h1>
-            <p>{group.description}</p>
-            <p>Members: {group.members.length}</p>
-            <p>Group ID: {group.groupID}</p>
+            <div className={styles.container}>
+                <h1>{group.name}</h1>
+                <p>{group.description}</p>
+                <p>Members: {group.members.length}</p>
+                <p>Group ID: {group.groupID}</p>
 
-            <h2>Group Members</h2>
-            <ul className={styles.membersList}>
-                {membersDetails.map((member) => (
-                    <li key={member.id}>{member.name}</li>
-                ))}
-            </ul>
-
-            <h2>Add an Expense</h2>
-            <form
-                onSubmit={(e) =>
-                    handleAddExpense(
-                        e,
-                        amount,
-                        paidBy,
-                        involvedMembers,
-                        splitType
-                    )
-                }
-                className={styles.expenseForm}
-            >
-                <div className={styles.formGroup}>
-                    <label>Amount:</label>
-                    <input
-                        type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className={styles.formGroup}>
-                    <label>Paid By:</label>
-                    <select
-                        value={paidBy}
-                        onChange={(e) => setPaidBy(e.target.value)}
-                        required
-                    >
-                        <option value="" disabled>
-                            Select Member
-                        </option>
-                        {membersDetails.map((member) => (
-                            <option key={member.id} value={member.name}>
-                                {member.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className={styles.formGroup}>
-                    <label>Involved Members:</label>
-                    <Select
-                        isMulti
-                        value={involvedMembers}
-                        onChange={setInvolvedMembers}
-                        options={memberOptions}
-                        className={styles.multiSelect}
-                    />
-                </div>
-                <div className={styles.formGroup}>
-                    <label>Split Type:</label>
-                    <select
-                        value={splitType}
-                        onChange={(e) => setSplitType(e.target.value)}
-                    >
-                        <option value="equal">Equal</option>
-                        <option value="percentage">Percentage</option>
-                    </select>
-                </div>
-                <button type="submit">Add Expense</button>
-            </form>
-
-            <h2>Expenses</h2>
-            <ul className={styles.expensesList}>
-                {expenses.map((expense) => (
-                    <li key={expense.id}>
-                        <p>Amount: {expense.amount}</p>
-                        <p>Paid By: {expense.paidBy}</p>
-                        <p>
-                            Involved Members:{" "}
-                            {expense.involvedMembers.join(", ")}
-                        </p>
-                        <p>Split Type: {expense.splitType}</p>
-                        <p>
-                            Date:{" "}
-                            {new Date(
-                                expense.date.seconds * 1000
-                            ).toLocaleDateString()}
-                        </p>
-                        <button
-                            onClick={() =>
-                                handleDeleteExpense(
-                                    expense.id,
-                                    expense.involvedMembers,
-                                    expense.paidBy,
-                                    expense.amount
-                                )
-                            }
+                <h3>Group Members</h3>
+                <ul className={styles.membersList}>
+                    {membersDetails.map((member) => (
+                        <li key={member.id}>{member.name}</li>
+                    ))}
+                </ul>
+            </div>
+            <div className={styles.container}>
+                <h2>Add an Expense</h2>
+                <form
+                    onSubmit={(e) =>
+                        handleAddExpense(
+                            e,
+                            amount,
+                            paidBy,
+                            involvedMembers,
+                            splitType,
+                            manualSplits
+                        )
+                    }
+                    className={styles.expenseForm}
+                >
+                    <div className={styles.formGroup}>
+                        <label>Total Amount:</label>
+                        <input
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Paid By:</label>
+                        <select
+                            value={paidBy}
+                            onChange={(e) => setPaidBy(e.target.value)}
+                            required
                         >
-                            Delete
-                        </button>
-                    </li>
-                ))}
-            </ul>
+                            <option value="" disabled>
+                                Select Member
+                            </option>
+                            {membersDetails.map((member) => (
+                                <option key={member.id} value={member.name}>
+                                    {member.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Involved Members:</label>
+                        <Select
+                            isMulti
+                            value={involvedMembers}
+                            onChange={setInvolvedMembers}
+                            options={memberOptions}
+                            className={styles.multiSelect}
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Split Type:</label>
+                        <select
+                            value={splitType}
+                            onChange={(e) => setSplitType(e.target.value)}
+                        >
+                            <option value="equal">Equal</option>
+                            <option value="manual">Manual</option>
+                        </select>
+                    </div>
+                    {splitType === "manual" && (
+                        <div className={styles.manualSplits}>
+                            {involvedMembers.map((member) => (
+                                <div
+                                    key={member.value}
+                                    className={styles.formGroup}
+                                >
+                                    <label>{member.label}'s share:</label>
+                                    <input
+                                        type="number"
+                                        value={manualSplits[member.value] || ""}
+                                        onChange={(e) =>
+                                            handleManualSplitChange(
+                                                member.value,
+                                                e.target.value
+                                            )
+                                        }
+                                        required
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <button type="submit">Add Expense</button>
+                </form>
+            </div>
 
-            <GroupBalances groupId={groupId} refreshBalances={refreshKey} />
+            <div className={styles.container}>
+                <h2>Expenses</h2>
+                <ul className={styles.expensesList}>
+                    {expenses.map((expense) => (
+                        <li key={expense.id}>
+                            <p>Amount: {expense.amount}</p>
+                            <p>Paid By: {expense.paidBy}</p>
+                            <p>
+                                Involved Members:{" "}
+                                {expense.involvedMembers.join(", ")}
+                            </p>
+                            <p>Split Type: {expense.splitType}</p>
+                            <p>
+                                Date:{" "}
+                                {new Date(
+                                    expense.date.seconds * 1000
+                                ).toLocaleDateString()}
+                            </p>
+                            <button
+                                onClick={() =>
+                                    handleDeleteExpense(
+                                        expense.id,
+                                        expense.involvedMembers,
+                                        expense.paidBy,
+                                        expense.amount
+                                    )
+                                }
+                            >
+                                Delete
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div className={styles.container}>
+                <GroupBalances groupId={groupId} refreshBalances={refreshKey} />
+            </div>
         </div>
     );
 };

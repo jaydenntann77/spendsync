@@ -2,7 +2,6 @@ import "./App.css";
 import { Taskbar } from "./components/Taskbar/Taskbar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Auth } from "./pages/auth/index";
-import { AddFriends } from "./pages/add-friends/index";
 import { ExpenseTracker } from "./pages/expense-tracker/index";
 import { AddTransaction } from "./pages/add-transaction/index";
 import { Groups } from "./pages/groups/index";
@@ -38,10 +37,6 @@ function App() {
                             <Route
                                 path="/group/:groupId"
                                 element={<GroupDetails />}
-                            />
-                            <Route
-                                path="/add-friends"
-                                element={<AddFriends />}
                             />
                         </Routes>
                     </div>

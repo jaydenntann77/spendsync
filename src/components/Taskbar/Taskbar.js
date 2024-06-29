@@ -63,11 +63,6 @@ export const Taskbar = () => {
                         <Link to="/groups">Groups</Link>
                     </button>
                 </li>
-                <li>
-                    <button className="link-button">
-                        <Link to="/add-friends">Add Friends</Link>
-                    </button>
-                </li>
             </ul>
             <div className="profile-section">
                 {profilePhoto && (
