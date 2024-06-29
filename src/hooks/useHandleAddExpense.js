@@ -61,6 +61,7 @@ export const useHandleAddExpense = (
                         paidBy,
                         involvedMembers: members,
                         splitType,
+                        manualSplits,
                         date: new Date(),
                     });
 

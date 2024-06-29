@@ -174,10 +174,31 @@ export const GroupDetails = () => {
                         <li key={expense.id}>
                             <p>Amount: {expense.amount}</p>
                             <p>Paid By: {expense.paidBy}</p>
-                            <p>
-                                Involved Members:{" "}
-                                {expense.involvedMembers.join(", ")}
-                            </p>
+                            {expense.splitType === "manual" ? (
+                                <p>
+                                    {expense.involvedMembers.map(
+                                        (member, index) => (
+                                            <span key={index}>
+                                                {member}:{" "}
+                                                {expense.manualSplits
+                                                    ? expense.manualSplits[
+                                                          member
+                                                      ]
+                                                    : "N/A"}
+                                                {index !==
+                                                    expense.involvedMembers
+                                                        .length -
+                                                        1 && ", "}
+                                            </span>
+                                        )
+                                    )}
+                                </p>
+                            ) : (
+                                <p>
+                                    Involved Members:{" "}
+                                    {expense.involvedMembers.join(", ")}
+                                </p>
+                            )}
                             <p>Split Type: {expense.splitType}</p>
                             <p>
                                 Date:{" "}
@@ -191,7 +212,9 @@ export const GroupDetails = () => {
                                         expense.id,
                                         expense.involvedMembers,
                                         expense.paidBy,
-                                        expense.amount
+                                        expense.amount,
+                                        expense.splitType,
+                                        expense.manualSplits
                                     )
                                 }
                             >
@@ -201,6 +224,7 @@ export const GroupDetails = () => {
                     ))}
                 </ul>
             </div>
+
             <div className={styles.container}>
                 <GroupBalances groupId={groupId} refreshBalances={refreshKey} />
             </div>

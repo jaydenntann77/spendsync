@@ -8,7 +8,14 @@ export const useHandleDeleteExpense = (
     setRefreshKey
 ) => {
     const handleDeleteExpense = useCallback(
-        async (expenseId, involvedMembers, paidBy, amount) => {
+        async (
+            expenseId,
+            involvedMembers,
+            paidBy,
+            amount,
+            splitType,
+            manualSplits
+        ) => {
             const splitAmount = amount / involvedMembers.length;
 
             try {
@@ -64,8 +71,11 @@ export const useHandleDeleteExpense = (
                                 `${member}_${paidBy}`
                             );
 
-                            let balanceAmount = -splitAmount;
-                            let reverseBalanceAmount = splitAmount;
+                            let balanceAmount =
+                                splitType === "manual"
+                                    ? -parseFloat(manualSplits[member])
+                                    : -splitAmount;
+                            let reverseBalanceAmount = -balanceAmount;
 
                             if (balanceDocs[member].exists()) {
                                 balanceAmount +=
