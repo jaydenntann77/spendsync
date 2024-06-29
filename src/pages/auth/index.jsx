@@ -3,7 +3,7 @@ import { auth, provider } from "../../config/firebase-config";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, collection, addDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import styles from "./Auth.module.css"; // Import the CSS module
 
@@ -27,6 +27,25 @@ export const Auth = () => {
                 userID: results.user.uid,
                 name: results.user.displayName,
                 profilePhoto: results.user.photoURL,
+            });
+
+            // Add default categories to the user's categories subcollection
+            const defaultCategories = [
+                { name: "Food", type: "expense" },
+                { name: "Transport", type: "expense" },
+                { name: "Entertainment", type: "expense" },
+                { name: "Salary", type: "income" },
+                { name: "Gift", type: "income" },
+            ];
+
+            const categoriesCollectionRef = collection(
+                db,
+                "users",
+                results.user.uid,
+                "categories"
+            );
+            defaultCategories.forEach(async (category) => {
+                await addDoc(categoriesCollectionRef, category);
             });
 
             localStorage.setItem("auth", JSON.stringify(authInfo));

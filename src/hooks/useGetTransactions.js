@@ -22,7 +22,12 @@ export const useGetTransactions = () => {
     useEffect(() => {
         if (!userID) return; // Wait until userID is available
 
-        const transactionCollectionRef = collection(db, "transactions");
+        const transactionCollectionRef = collection(
+            db,
+            "users",
+            userID,
+            "transactions"
+        );
 
         const getTransactions = async () => {
             const queryTransactions = query(
