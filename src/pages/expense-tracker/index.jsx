@@ -6,9 +6,8 @@ import "../../App.css";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 
 export const ExpenseTracker = () => {
-    const { transactions } = useGetTransactions();
+    const { transactions, transactionTotal } = useGetTransactions();
     const { deleteTransaction } = useDeleteTransaction();
-    const { transactionTotal } = useGetTransactions();
     const { name } = useGetUserInfo();
 
     const { balance, income, expenses } = transactionTotal;
@@ -50,7 +49,7 @@ export const ExpenseTracker = () => {
                         } = transaction;
 
                         return (
-                            <li key={transaction.id}>
+                            <li key={id}>
                                 <h4>{description}</h4>
                                 <p>
                                     ${transactionAmount} |{" "}

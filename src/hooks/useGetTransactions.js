@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-    query,
-    collection,
-    where,
-    orderBy,
-    onSnapshot,
-} from "firebase/firestore";
+import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
 
@@ -32,7 +26,6 @@ export const useGetTransactions = () => {
         const getTransactions = async () => {
             const queryTransactions = query(
                 transactionCollectionRef,
-                where("userID", "==", userID),
                 orderBy("createdAt")
             );
 
