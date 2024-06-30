@@ -13,15 +13,20 @@
     box-sizing: border-box;
 }
 
+/* Adjust the container styles for better alignment and spacing */
 .expenseTracker .container {
     background-color: white;
-    padding: 1rem;
+    padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    max-width: 800px; /* Increase the max-width for better spacing */
     width: 100%;
-    margin-bottom: 2rem;
+    margin: 2rem auto; /* Center align the container */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 
 .expenseTracker h1 {
     margin-bottom: 1rem;
@@ -29,15 +34,16 @@
 }
 
 .expenseTracker .balance {
+    background-color: #f9f9f9; /* Light background color */
+    padding: 1rem; /* Padding around the content */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Center align text */
     margin-bottom: 2rem;
 }
 
-.expenseTracker .balance h3 {
-    margin-bottom: 0.5rem;
-}
-
 .expenseTracker .balance h2 {
-    font-size: 2rem;
+    font-size: 2.5rem; /* Larger font size for balance */
 }
 
 .expenseTracker .summary {
@@ -53,7 +59,31 @@
     border-radius: 8px;
     text-align: center;
     margin: 0 0.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.expenseTracker .income:hover, .expenseTracker .expenses:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.expenseTracker .income h4, .expenseTracker .expenses h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.expenseTracker .income p, .expenseTracker .expenses p {
+    font-size: 1.25rem;
+    color: #4caf50; /* Green for income */
+}
+
+.expenseTracker .expenses p {
+    color: #f44336; /* Red for expenses */
+}
+
 
 .expenseTracker .addTransaction {
     display: flex;
@@ -119,13 +149,17 @@
 
 .expenseTracker .transactions {
     background-color: white;
-    padding: 1rem;
+    padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 2rem;
-    max-width: 600px;
+    max-width: 800px;
     width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem auto;
 }
+
 
 .expenseTracker .transactions h3 {
     margin-bottom: 1rem;

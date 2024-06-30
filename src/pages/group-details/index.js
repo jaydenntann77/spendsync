@@ -12,6 +12,7 @@ import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
 export const GroupDetails = () => {
     const { groupId } = useParams();
     const [amount, setAmount] = useState("");
+    const [description, setDescription] = useState(""); // New state for description
     const [paidBy, setPaidBy] = useState("");
     const [involvedMembers, setInvolvedMembers] = useState([]);
     const [splitType, setSplitType] = useState("equal");
@@ -27,6 +28,7 @@ export const GroupDetails = () => {
         fetchExpenses,
         setRefreshKey,
         setAmount,
+        setDescription, // Pass setDescription to the hook
         setPaidBy,
         setInvolvedMembers,
         setSplitType,
@@ -39,6 +41,7 @@ export const GroupDetails = () => {
             [memberId]: value,
         }));
     };
+
     const handleDeleteExpense = useHandleDeleteExpense(
         groupId,
         fetchExpenses,
@@ -86,6 +89,7 @@ export const GroupDetails = () => {
                         handleAddExpense(
                             e,
                             amount,
+                            description, // Pass description to the handleAddExpense function
                             paidBy,
                             involvedMembers,
                             splitType,
@@ -100,6 +104,15 @@ export const GroupDetails = () => {
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Description:</label>
+                        <input
+                            type="text"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                             required
                         />
                     </div>
@@ -173,6 +186,8 @@ export const GroupDetails = () => {
                     {expenses.map((expense) => (
                         <li key={expense.id}>
                             <p>Amount: {expense.amount}</p>
+                            <p>Description: {expense.description}</p>{" "}
+                            {/* Display description */}
                             <p>Paid By: {expense.paidBy}</p>
                             {expense.splitType === "manual" ? (
                                 <p>

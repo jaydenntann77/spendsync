@@ -7,13 +7,22 @@ export const useHandleAddExpense = (
     fetchExpenses,
     setRefreshKey,
     setAmount,
+    setDescription, // Add setDescription
     setPaidBy,
     setInvolvedMembers,
     setSplitType,
     setManualSplits
 ) => {
     const handleAddExpense = useCallback(
-        async (e, amount, paidBy, involvedMembers, splitType, manualSplits) => {
+        async (
+            e,
+            amount,
+            description,
+            paidBy,
+            involvedMembers,
+            splitType,
+            manualSplits
+        ) => {
             e.preventDefault();
             const members = involvedMembers.map((member) => member.value);
 
@@ -58,6 +67,7 @@ export const useHandleAddExpense = (
                     // Perform writes after all reads
                     await addDoc(expensesRef, {
                         amount: parseFloat(amount),
+                        description, // Add description here
                         paidBy,
                         involvedMembers: members,
                         splitType,
@@ -109,6 +119,7 @@ export const useHandleAddExpense = (
 
                 // Reset form state
                 setAmount("");
+                setDescription(""); // Reset description
                 setPaidBy("");
                 setInvolvedMembers([]);
                 setSplitType("equal");
@@ -126,6 +137,7 @@ export const useHandleAddExpense = (
             fetchExpenses,
             setRefreshKey,
             setAmount,
+            setDescription, // Add setDescription to dependency array
             setPaidBy,
             setInvolvedMembers,
             setSplitType,
