@@ -88,14 +88,14 @@ export const useHandleDeleteExpense = (
                             }
 
                             transaction.set(balanceDocRef, {
-                                from: paidBy,
-                                to: member,
+                                from: member,
+                                to: paidBy,
                                 amount: balanceAmount,
                             });
 
                             transaction.set(reverseBalanceDocRef, {
-                                from: member,
-                                to: paidBy,
+                                from: paidBy,
+                                to: member,
                                 amount: reverseBalanceAmount,
                             });
                         }

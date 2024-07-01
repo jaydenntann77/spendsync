@@ -19,6 +19,7 @@ export const GroupDetails = () => {
     const [manualSplits, setManualSplits] = useState({});
     const [refreshKey, setRefreshKey] = useState(0);
     const navigate = useNavigate();
+    const [isTotalValid, setIsTotalValid] = useState(true); // Track if total is valid
 
     const { group, error } = useFetchGroupDetails(groupId);
     const membersDetails = useFetchMembersDetails(group);
@@ -36,10 +37,20 @@ export const GroupDetails = () => {
     );
 
     const handleManualSplitChange = (memberId, value) => {
-        setManualSplits((prev) => ({
-            ...prev,
+        const updatedManualSplits = {
+            ...manualSplits,
             [memberId]: value,
-        }));
+        };
+        setManualSplits(updatedManualSplits);
+
+        // Calculate total of manual splits
+        const total = Object.values(updatedManualSplits).reduce(
+            (acc, curr) => acc + parseFloat(curr || 0),
+            0
+        );
+
+        // Check if total is valid
+        setIsTotalValid(total === parseFloat(amount));
     };
 
     const handleDeleteExpense = useHandleDeleteExpense(
@@ -85,17 +96,24 @@ export const GroupDetails = () => {
             <div className={styles.container}>
                 <h2>Add an Expense</h2>
                 <form
-                    onSubmit={(e) =>
-                        handleAddExpense(
-                            e,
-                            amount,
-                            description, // Pass description to the handleAddExpense function
-                            paidBy,
-                            involvedMembers,
-                            splitType,
-                            manualSplits
-                        )
-                    }
+                    onSubmit={(e) => {
+                        if (isTotalValid) {
+                            handleAddExpense(
+                                e,
+                                amount,
+                                description, // Pass description to the handleAddExpense function
+                                paidBy,
+                                involvedMembers,
+                                splitType,
+                                manualSplits
+                            );
+                        } else {
+                            e.preventDefault();
+                            alert(
+                                "Total of manual splits must equal the total amount."
+                            );
+                        }
+                    }}
                     className={styles.expenseForm}
                 >
                     <div className={styles.formGroup}>
@@ -174,8 +192,15 @@ export const GroupDetails = () => {
                                     />
                                 </div>
                             ))}
+                            {!isTotalValid && (
+                                <p className={styles.error}>
+                                    Total of manual splits must equal the total
+                                    amount.
+                                </p>
+                            )}
                         </div>
                     )}
+
                     <button type="submit">Add Expense</button>
                 </form>
             </div>
