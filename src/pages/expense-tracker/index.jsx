@@ -2,6 +2,8 @@ import React from "react";
 import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useDeleteTransaction } from "../../hooks/useDeleteTransaction";
 import styles from "./ExpenseTracker.module.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import "../../App.css";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 import { CategoryPieChart } from "../../components/Dashboard/CategoryPieChart";
@@ -18,13 +20,13 @@ export const ExpenseTracker = () => {
         deleteTransaction(transactionId);
     };
 
-    //prepare data for bar chart
+
     const barChartData = [
         { name: "Income", value: income },
         { name: "Expenses", value: expenses },
     ];
 
-    // Prepare data for pie chart
+
     const expenseByCategory = transactions.reduce((acc, transaction) => {
         if (transaction.transactionType === "expense") {
             const category = transaction.category;
@@ -93,11 +95,12 @@ export const ExpenseTracker = () => {
                                         {transactionType}
                                     </label>{" "}
                                     | <span>{category}</span>{" "}
-                                    {/* Display category */}
+                                    <FontAwesomeIcon 
+                                        icon={faTrashAlt} 
+                                        className={styles.deleteIcon} 
+                                        onClick={() => handleDelete(id)} 
+                                    />
                                 </p>
-                                <button onClick={() => handleDelete(id)}>
-                                    Delete
-                                </button>
                             </li>
                         );
                     })}

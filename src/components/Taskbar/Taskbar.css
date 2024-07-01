@@ -1,101 +1,119 @@
 .taskbar {
-    width: 200px;
-    height: 100vh;
-    background-color: #333;
-    color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-    transition: transform 0.3s ease;
-    transform: translateX(-100%); /* Hide the taskbar by default */
-  }
-  
-  .taskbar.open {
-    transform: translateX(0); /* Show the taskbar when open */
-  }
-  
-  .toggle-button {
-    position: absolute;
-    top: 20px;
-    left: 200px;
-    background-color: #444;
-    color: white;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 1;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    margin: 15px 0;
-  }
-  
-  .link-button {
-    background-color: #444;
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    width: 100%;
-    transition: background-color 0.3s;
-  }
-  
-  .link-button a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    width: 100%;
-  }
-  
-  .link-button:hover {
-    background-color: #555;
-  }
-  
-  .link-button a:hover {
-    text-decoration: none;
-  }
-  
-  .profile-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    margin-top: auto; /* Pushes the profile section to the bottom */
-    padding-bottom: 20px; /* Adds some space at the bottom */
-  }
-  
-  .profile-photo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-  }
-  
-  .sign-out-button {
-    background-color: #444;
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    width: 100%;
-    transition: background-color 0.3s;
-  }
-  
-  .sign-out-button:hover {
-    background-color: #555;
-  }
-  
+  width: 200px;
+  height: 100vh;
+  background-color: #EBE9E1;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%); /* Hide the taskbar by default */
+}
+
+.taskbar.open {
+  transform: translateX(0); /* Show the taskbar when open */
+}
+
+.toggle-button {
+  position: absolute;
+  top: 20px;
+  left: 200px;
+  background-color: #EBE9E1;
+  color: #444;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 15px 0;
+}
+
+.link-button {
+  background-color: white;
+  border: none;
+  padding: 10px 20px;
+  color: #313131;
+  text-align: left; 
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  align-items: center; /* Align items center to align icon and text */
+  transition: background-color 0.3s;
+}
+
+.link-button a {
+  color: #313131; /* Set the link color explicitly to dark grey */
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
+.link-button:hover {
+  background-color: #d1cfc7;
+}
+
+.link-button a:hover {
+  text-decoration: none;
+}
+
+.link-button .icon {
+  margin-right: 10px; /* Space between icon and text */
+}
+
+.link-text {
+  flex-grow: 1; /* Ensure the text takes up remaining space */
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin-top: 630px; 
+}
+
+.profile-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.sign-out-button {
+  background-color: white;
+  border: none;
+  padding: 10px 20px;
+  color: #444;
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  align-items: center; 
+  transition: background-color 0.3s;
+}
+
+.sign-out-button .icon {
+  margin-right: 10px; 
+}
+
+.sign-out-button:hover {
+  background-color: #d1cfc7;
+}
+
+.styles.deleteIcon {
+  margin-left: 20px;
+}
