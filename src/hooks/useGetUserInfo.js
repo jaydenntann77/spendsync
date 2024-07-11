@@ -8,6 +8,7 @@ export const useGetUserInfo = () => {
         profilePhoto: "",
         userID: "",
         isAuth: false,
+        baseCurrency: "",
     });
 
     useEffect(() => {
@@ -18,6 +19,7 @@ export const useGetUserInfo = () => {
                     name: user.displayName,
                     profilePhoto: user.photoURL,
                     isAuth: true,
+                    baseCurrency: user.baseCurrency,
                 };
                 localStorage.setItem("auth", JSON.stringify(authInfo));
                 setUserInfo(authInfo);
@@ -28,6 +30,7 @@ export const useGetUserInfo = () => {
                     profilePhoto: "",
                     userID: "",
                     isAuth: false,
+                    baseCurrency: "",
                 });
             }
         });

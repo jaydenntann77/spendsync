@@ -1,28 +1,33 @@
-import { useEffect, useState } from "react";
+// src/hooks/useFetchExchangeRates.js
+
+import { useState, useEffect } from "react";
 import { db } from "../config/firebase-config";
 import { doc, getDoc } from "firebase/firestore";
 
 export const useFetchExchangeRates = () => {
-    const [exchangeRates, setExchangeRates] = useState(null);
-    const [error, setError] = useState(null);
+    const [exchangeRates, setExchangeRates] = useState({});
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchRates = async () => {
+        const fetchExchangeRates = async () => {
             try {
-                const docRef = doc(db, "exchangeRates", "latest");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setExchangeRates(docSnap.data());
+                const exchangeRatesDoc = await getDoc(
+                    doc(db, "exchangeRates", "latest")
+                );
+                if (exchangeRatesDoc.exists()) {
+                    setExchangeRates(exchangeRatesDoc.data().conversion_rates);
                 } else {
-                    setError("No exchange rates found");
+                    console.error("No exchange rates found");
                 }
-            } catch (err) {
-                setError(err.message);
+            } catch (error) {
+                console.error("Error fetching exchange rates:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchRates();
+        fetchExchangeRates();
     }, []);
 
-    return { exchangeRates, error };
+    return { exchangeRates, loading };
 };

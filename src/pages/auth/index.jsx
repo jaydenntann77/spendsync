@@ -34,7 +34,8 @@ export const Auth = () => {
                     userID: userID,
                     name: results.user.displayName,
                     profilePhoto: results.user.photoURL,
-                    defaultCategoriesAdded: false, // Add a flag to indicate if default categories have been added
+                    defaultCategoriesAdded: false,
+                    baseCurrency: "SGD", //default currency
                 });
                 console.log("User document created");
             }

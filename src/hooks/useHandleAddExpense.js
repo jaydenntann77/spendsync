@@ -11,7 +11,10 @@ export const useHandleAddExpense = (
     setPaidBy,
     setInvolvedMembers,
     setSplitType,
-    setManualSplits
+    setManualSplits,
+    currency,
+    exchangeRates,
+    baseCurrency
 ) => {
     const handleAddExpense = useCallback(
         async (
@@ -24,7 +27,13 @@ export const useHandleAddExpense = (
             manualSplits
         ) => {
             e.preventDefault();
+            // Convert amount to base currency
+            const rateToUSD = exchangeRates[currency]?.USD || 1;
+            const rateFromBase = exchangeRates[baseCurrency]?.USD || 1;
+            const convertedAmount = (amount / rateToUSD) * rateFromBase;
+
             const members = involvedMembers.map((member) => member.value);
+            const splitAmount = parseFloat(convertedAmount) / members.length;
 
             try {
                 await runTransaction(db, async (transaction) => {
@@ -66,12 +75,13 @@ export const useHandleAddExpense = (
 
                     // Perform writes after all reads
                     await addDoc(expensesRef, {
-                        amount: parseFloat(amount),
+                        amount: parseFloat(convertedAmount),
                         description, // Add description here
                         paidBy,
                         involvedMembers: members,
                         splitType,
                         manualSplits,
+                        currency,
                         date: new Date(),
                     });
 
@@ -89,7 +99,7 @@ export const useHandleAddExpense = (
                             let balanceAmount =
                                 splitType === "manual"
                                     ? parseFloat(manualSplits[member])
-                                    : parseFloat(amount) / members.length;
+                                    : splitAmount;
                             let reverseBalanceAmount = -balanceAmount;
 
                             if (balanceDocs[member].exists()) {
@@ -142,6 +152,9 @@ export const useHandleAddExpense = (
             setInvolvedMembers,
             setSplitType,
             setManualSplits,
+            currency,
+            exchangeRates,
+            baseCurrency,
         ]
     );
 

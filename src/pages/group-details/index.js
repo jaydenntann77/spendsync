@@ -1,3 +1,5 @@
+// src/pages/expense-tracker/GroupDetails.jsx
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useFetchGroupDetails } from "../../hooks/useFetchGroupDetails";
@@ -9,6 +11,7 @@ import { useFetchExchangeRates } from "../../hooks/useFetchExchangeRates";
 import Select from "react-select";
 import styles from "./GroupDetails.module.css";
 import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
+import { BaseCurrencySelector } from "../../components/BaseCurrencySelector/BaseCurrencySelector";
 
 export const GroupDetails = () => {
     const { groupId } = useParams();
@@ -19,6 +22,7 @@ export const GroupDetails = () => {
     const [splitType, setSplitType] = useState("equal");
     const [manualSplits, setManualSplits] = useState({});
     const [currency, setCurrency] = useState("USD");
+    const [baseCurrency, setBaseCurrency] = useState("USD");
     const [refreshKey, setRefreshKey] = useState(0);
     const navigate = useNavigate();
     const [isTotalValid, setIsTotalValid] = useState(true);
@@ -39,7 +43,8 @@ export const GroupDetails = () => {
         setSplitType,
         setManualSplits,
         currency,
-        exchangeRates
+        exchangeRates,
+        baseCurrency
     );
 
     const handleManualSplitChange = (memberId, value) => {
@@ -111,6 +116,10 @@ export const GroupDetails = () => {
             >
                 Back to Groups
             </button>
+            <BaseCurrencySelector
+                baseCurrency={baseCurrency}
+                setBaseCurrency={setBaseCurrency}
+            />
             <div className={styles.container}>
                 <h1>{group.name}</h1>
                 <p>{group.description}</p>
@@ -250,9 +259,15 @@ export const GroupDetails = () => {
                 <ul className={styles.expensesList}>
                     {expenses.map((expense) => (
                         <li key={expense.id}>
-                            <p>Amount: {expense.amount}</p>
+                            <p>Amount: {expense.amount.toFixed(2)}</p>
                             <p>Description: {expense.description}</p>
                             <p>Paid By: {expense.paidBy}</p>
+                            {expense.currency && expense.currency !== "USD" && (
+                                <p>
+                                    Expense Paid in {expense.currency} converted
+                                    to USD
+                                </p>
+                            )}
                             {expense.splitType === "manual" ? (
                                 <p>
                                     {expense.involvedMembers.map(
