@@ -85,3 +85,48 @@
         padding: 1rem 2rem;
     }
 }
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .loginContainer {
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .loginContainer h1 {
+        font-size: 1.5rem;
+    }
+
+    .loginContainer p {
+        font-size: 1rem;
+    }
+
+    .loginWithGoogleButton {
+        font-size: 1rem;
+        padding: 0.75rem 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .loginContainer {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .loginContainer h1 {
+        font-size: 1.25rem;
+    }
+
+    .loginContainer p {
+        font-size: 0.875rem;
+    }
+
+    .loginWithGoogleButton {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .loginWithGoogleButton img {
+        margin-right: 5px;
+    }
+}

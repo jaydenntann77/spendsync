@@ -117,3 +117,63 @@ li {
 .styles.deleteIcon {
   margin-left: 20px;
 }
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  .taskbar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    transform: translateY(-100%); /* Hide the taskbar by default */
+    flex-direction: row;
+    padding-top: 10px;
+  }
+
+  .taskbar.open {
+    transform: translateY(0); /* Show the taskbar when open */
+  }
+
+  .toggle-button {
+    top: 10px;
+    left: calc(100% - 50px);
+    width: 50px;
+    height: 50px;
+  }
+
+  ul {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  li {
+    margin: 0;
+  }
+
+  .link-button {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+
+  .profile-section {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .profile-photo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .sign-out-button {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+
+  .sign-out-button .icon {
+    margin-right: 5px;
+  }
+}
