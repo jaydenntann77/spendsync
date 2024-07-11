@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartBar, faDollarSign, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import "./Taskbar.css";
 import "./Taskbar.css";
 
 export const Taskbar = () => {
@@ -50,16 +53,19 @@ export const Taskbar = () => {
             <ul>
                 <li>
                     <button className="link-button">
+                        <FontAwesomeIcon icon={faChartBar} className="icon" />
                         <Link to="/">Dashboard</Link>
                     </button>
                 </li>
                 <li>
                     <button className="link-button">
+                        <FontAwesomeIcon icon={faDollarSign} className="icon" />
                         <Link to="/add-transaction">Add Transaction</Link>
                     </button>
                 </li>
                 <li>
                     <button className="link-button">
+                        <FontAwesomeIcon icon={faUsers} className="icon" />
                         <Link to="/groups">Groups</Link>
                     </button>
                 </li>
@@ -75,6 +81,7 @@ export const Taskbar = () => {
                     </div>
                 )}
                 <button className="sign-out-button" onClick={signUserOut}>
+                    <FontAwesomeIcon icon={faSignOutAlt} className="icon" />
                     Sign Out
                 </button>
             </div>

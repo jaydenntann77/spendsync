@@ -8,7 +8,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     overflow-y: auto;
     box-sizing: border-box;
 }
@@ -26,7 +26,6 @@
     flex-direction: column;
     align-items: center;
 }
-
 
 .expenseTracker h1 {
     margin-bottom: 1rem;
@@ -50,6 +49,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 2rem;
+    width: 100%;
 }
 
 .expenseTracker .income, .expenseTracker .expenses {
@@ -77,13 +77,12 @@
 
 .expenseTracker .income p, .expenseTracker .expenses p {
     font-size: 1.25rem;
-    color: #4caf50; /* Green for income */
+    color: #4caf50;
 }
 
 .expenseTracker .expenses p {
-    color: #f44336; /* Red for expenses */
+    color: #f44336;
 }
-
 
 .expenseTracker .addTransaction {
     display: flex;
@@ -155,24 +154,27 @@
     margin-top: 2rem;
     max-width: 800px;
     width: 100%;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 2rem auto;
 }
-
 
 .expenseTracker .transactions h3 {
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    color: #333
+    color: #333;
 }
 
 .expenseTracker .transactions ul {
     list-style: none;
     padding: 0;
+    width: 100%;
 }
 
 .expenseTracker .transactions li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid #ddd;
@@ -180,4 +182,19 @@
 
 .expenseTracker .transactions li:last-child {
     border-bottom: none;
+}
+
+.expenseTracker .transactions li h4 {
+    margin: 0;
+}
+
+.expenseTracker .transactions li p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.expenseTracker .transactions li .deleteIcon {
+    margin-left: 20px;
+    cursor: pointer;
 }
