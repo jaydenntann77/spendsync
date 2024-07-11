@@ -3,8 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faDollarSign, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faChartBar,
+    faDollarSign,
+    faUsers,
+    faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import "./Taskbar.css";
 import "./Taskbar.css";
 

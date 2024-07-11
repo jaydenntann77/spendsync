@@ -5,6 +5,7 @@ import { useFetchMembersDetails } from "../../hooks/useFetchMembersDetails";
 import { useFetchExpenses } from "../../hooks/useFetchExpenses";
 import { useHandleAddExpense } from "../../hooks/useHandleAddExpense";
 import { useHandleDeleteExpense } from "../../hooks/useHandleDeleteExpense";
+import { useFetchExchangeRates } from "../../hooks/useFetchExchangeRates";
 import Select from "react-select";
 import styles from "./GroupDetails.module.css";
 import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
@@ -12,28 +13,33 @@ import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
 export const GroupDetails = () => {
     const { groupId } = useParams();
     const [amount, setAmount] = useState("");
-    const [description, setDescription] = useState(""); // New state for description
+    const [description, setDescription] = useState("");
     const [paidBy, setPaidBy] = useState("");
     const [involvedMembers, setInvolvedMembers] = useState([]);
     const [splitType, setSplitType] = useState("equal");
     const [manualSplits, setManualSplits] = useState({});
+    const [currency, setCurrency] = useState("USD");
     const [refreshKey, setRefreshKey] = useState(0);
     const navigate = useNavigate();
-    const [isTotalValid, setIsTotalValid] = useState(true); // Track if total is valid
+    const [isTotalValid, setIsTotalValid] = useState(true);
 
     const { group, error } = useFetchGroupDetails(groupId);
     const membersDetails = useFetchMembersDetails(group);
     const { expenses, fetchExpenses } = useFetchExpenses(groupId);
+    const { exchangeRates, loading } = useFetchExchangeRates();
+
     const handleAddExpense = useHandleAddExpense(
         groupId,
         fetchExpenses,
         setRefreshKey,
         setAmount,
-        setDescription, // Pass setDescription to the hook
+        setDescription,
         setPaidBy,
         setInvolvedMembers,
         setSplitType,
-        setManualSplits
+        setManualSplits,
+        currency,
+        exchangeRates
     );
 
     const handleManualSplitChange = (memberId, value) => {
@@ -43,13 +49,10 @@ export const GroupDetails = () => {
         };
         setManualSplits(updatedManualSplits);
 
-        // Calculate total of manual splits
         const total = Object.values(updatedManualSplits).reduce(
             (acc, curr) => acc + parseFloat(curr || 0),
             0
         );
-
-        // Check if total is valid
         setIsTotalValid(total === parseFloat(amount));
     };
 
@@ -63,13 +66,41 @@ export const GroupDetails = () => {
         return <div>{error}</div>;
     }
 
-    if (!group) {
+    if (!group || loading) {
         return <div>Loading...</div>;
     }
 
     const memberOptions = membersDetails.map((member) => ({
         value: member.name,
         label: member.name,
+    }));
+
+    const topCurrencies = [
+        "USD",
+        "EUR",
+        "JPY",
+        "GBP",
+        "AUD",
+        "CAD",
+        "CHF",
+        "CNY",
+        "SEK",
+        "NZD",
+        "MXN",
+        "SGD",
+        "HKD",
+        "NOK",
+        "KRW",
+        "TRY",
+        "INR",
+        "RUB",
+        "BRL",
+        "ZAR",
+    ];
+
+    const currencyOptions = topCurrencies.map((currency) => ({
+        value: currency,
+        label: currency,
     }));
 
     return (
@@ -101,7 +132,7 @@ export const GroupDetails = () => {
                             handleAddExpense(
                                 e,
                                 amount,
-                                description, // Pass description to the handleAddExpense function
+                                description,
                                 paidBy,
                                 involvedMembers,
                                 splitType,
@@ -162,6 +193,15 @@ export const GroupDetails = () => {
                         />
                     </div>
                     <div className={styles.formGroup}>
+                        <label>Currency:</label>
+                        <Select
+                            value={{ value: currency, label: currency }}
+                            onChange={(selected) => setCurrency(selected.value)}
+                            options={currencyOptions}
+                            className={styles.multiSelect}
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
                         <label>Split Type:</label>
                         <select
                             value={splitType}
@@ -211,8 +251,7 @@ export const GroupDetails = () => {
                     {expenses.map((expense) => (
                         <li key={expense.id}>
                             <p>Amount: {expense.amount}</p>
-                            <p>Description: {expense.description}</p>{" "}
-                            {/* Display description */}
+                            <p>Description: {expense.description}</p>
                             <p>Paid By: {expense.paidBy}</p>
                             {expense.splitType === "manual" ? (
                                 <p>
