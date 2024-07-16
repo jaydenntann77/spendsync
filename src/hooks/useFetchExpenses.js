@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 
-export const useFetchExpenses = (groupId) => {
+export const useFetchExpenses = (groupId, refreshKey) => {
     const [expenses, setExpenses] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const fetchExpenses = useCallback(async () => {
         try {
@@ -14,6 +15,7 @@ export const useFetchExpenses = (groupId) => {
                 ...doc.data(),
             }));
             setExpenses(expensesList);
+            setLoading(false);
         } catch (err) {
             console.error("Error fetching expenses:", err);
         }
@@ -21,7 +23,7 @@ export const useFetchExpenses = (groupId) => {
 
     useEffect(() => {
         fetchExpenses();
-    }, [fetchExpenses]);
+    }, [fetchExpenses, refreshKey]); // Add refreshKey as a dependency
 
-    return { expenses, fetchExpenses };
+    return { expenses, fetchExpenses, loading };
 };

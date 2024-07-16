@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { doc, collection, addDoc, runTransaction } from "firebase/firestore";
 import { db } from "../config/firebase-config";
-import { useFetchUserCurrency } from "./useFetchUserCurrency";
+import { useFetchGroupCurrency } from "./useFetchGroupCurrency";
 
 export const useHandleAddExpense = (
     groupId,
@@ -16,7 +16,7 @@ export const useHandleAddExpense = (
     currency,
     exchangeRates
 ) => {
-    const [selectedCurrency] = useFetchUserCurrency();
+    const { groupCurrency, loading } = useFetchGroupCurrency(groupId);
 
     const handleAddExpense = useCallback(
         async (
@@ -31,12 +31,8 @@ export const useHandleAddExpense = (
             e.preventDefault();
             // Convert amount to base currency
             const rateToUSD = exchangeRates[currency];
-            console.log(rateToUSD);
-            const rateFromBase = exchangeRates[selectedCurrency];
-            console.log(rateFromBase);
+            const rateFromBase = exchangeRates[groupCurrency];
             const convertedAmount = (amount / rateToUSD) * rateFromBase;
-
-            console.log(convertedAmount);
 
             const members = involvedMembers.map((member) => member.value);
             const splitAmount = parseFloat(convertedAmount) / members.length;

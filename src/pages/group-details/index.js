@@ -8,6 +8,7 @@ import { useFetchExpenses } from "../../hooks/useFetchExpenses";
 import { useHandleAddExpense } from "../../hooks/useHandleAddExpense";
 import { useHandleDeleteExpense } from "../../hooks/useHandleDeleteExpense";
 import { useFetchExchangeRates } from "../../hooks/useFetchExchangeRates";
+import { useFetchGroupCurrency } from "../../hooks/useFetchGroupCurrency";
 import Select from "react-select";
 import styles from "./GroupDetails.module.css";
 import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
@@ -28,8 +29,12 @@ export const GroupDetails = () => {
 
     const { group, error } = useFetchGroupDetails(groupId);
     const membersDetails = useFetchMembersDetails(group);
-    const { expenses, fetchExpenses } = useFetchExpenses(groupId);
-    const { exchangeRates, loading } = useFetchExchangeRates();
+    const { expenses, fetchExpenses, loading } = useFetchExpenses(
+        groupId,
+        refreshKey
+    );
+    const { exchangeRates } = useFetchExchangeRates();
+    const { groupCurrency } = useFetchGroupCurrency(groupId);
 
     const handleAddExpense = useHandleAddExpense(
         groupId,
@@ -64,6 +69,10 @@ export const GroupDetails = () => {
         fetchExpenses,
         setRefreshKey
     );
+
+    const handleBaseCurrencyChange = () => {
+        setRefreshKey((prevKey) => prevKey + 1); // Trigger a refresh of expenses and balances
+    };
 
     if (error) {
         return <div>{error}</div>;
@@ -114,7 +123,9 @@ export const GroupDetails = () => {
             >
                 Back to Groups
             </button>
-            <BaseCurrencySelector />
+            <BaseCurrencySelector
+                onUpdateBaseCurrency={handleBaseCurrencyChange}
+            />
             <div className={styles.container}>
                 <h1>{group.name}</h1>
                 <p>{group.description}</p>
@@ -257,12 +268,13 @@ export const GroupDetails = () => {
                             <p>Amount: {expense.amount.toFixed(2)}</p>
                             <p>Description: {expense.description}</p>
                             <p>Paid By: {expense.paidBy}</p>
-                            {expense.currency && expense.currency !== "USD" && (
-                                <p>
-                                    Expense Paid in {expense.currency} converted
-                                    to USD
-                                </p>
-                            )}
+                            {expense.currency &&
+                                expense.currency !== groupCurrency && (
+                                    <p>
+                                        Expense Paid in {expense.currency}{" "}
+                                        converted to {groupCurrency}
+                                    </p>
+                                )}
                             {expense.splitType === "manual" ? (
                                 <p>
                                     {expense.involvedMembers.map(

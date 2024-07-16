@@ -8,10 +8,12 @@ const generateUniqueID = () => {
 };
 
 export const useCreateGroup = () => {
-    const { userID } = useGetUserInfo();
+    const { userID, baseCurrency: userBaseCurrency } = useGetUserInfo(); // Fetch user's base currency
 
     const createGroup = async (name, description) => {
         const groupID = generateUniqueID();
+        const defaultGroupBaseCurrency = userBaseCurrency || "SGD"; // Set default base currency for the group
+
         try {
             const groupRef = collection(db, "groups");
             await addDoc(groupRef, {
@@ -19,6 +21,7 @@ export const useCreateGroup = () => {
                 description,
                 members: [userID],
                 groupID,
+                baseCurrency: defaultGroupBaseCurrency, // Add base currency to the group
             });
         } catch (error) {
             console.error("Error creating group: ", error);
