@@ -22,7 +22,6 @@ export const GroupDetails = () => {
     const [splitType, setSplitType] = useState("equal");
     const [manualSplits, setManualSplits] = useState({});
     const [currency, setCurrency] = useState("USD");
-    const [baseCurrency, setBaseCurrency] = useState("USD");
     const [refreshKey, setRefreshKey] = useState(0);
     const navigate = useNavigate();
     const [isTotalValid, setIsTotalValid] = useState(true);
@@ -43,8 +42,7 @@ export const GroupDetails = () => {
         setSplitType,
         setManualSplits,
         currency,
-        exchangeRates,
-        baseCurrency
+        exchangeRates
     );
 
     const handleManualSplitChange = (memberId, value) => {
@@ -116,10 +114,7 @@ export const GroupDetails = () => {
             >
                 Back to Groups
             </button>
-            <BaseCurrencySelector
-                baseCurrency={baseCurrency}
-                setBaseCurrency={setBaseCurrency}
-            />
+            <BaseCurrencySelector />
             <div className={styles.container}>
                 <h1>{group.name}</h1>
                 <p>{group.description}</p>

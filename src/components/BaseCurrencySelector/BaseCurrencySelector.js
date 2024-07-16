@@ -1,25 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Select from "react-select";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
+import { useFetchUserCurrency } from "../../hooks/useFetchUserCurrency";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 
 export const BaseCurrencySelector = () => {
-    const { userID, baseCurrency, isAuth } = useGetUserInfo();
-    const [selectedCurrency, setSelectedCurrency] = useState(baseCurrency);
-
-    useEffect(() => {
-        const fetchUserCurrency = async () => {
-            if (userID) {
-                const userDoc = await getDoc(doc(db, "users", userID));
-                if (userDoc.exists()) {
-                    setSelectedCurrency(userDoc.data().baseCurrency || "SGD");
-                }
-            }
-        };
-
-        fetchUserCurrency();
-    }, [userID]);
+    const [selectedCurrency, setSelectedCurrency] = useFetchUserCurrency();
+    const { userID } = useGetUserInfo();
 
     const updateBaseCurrency = async (newCurrency) => {
         if (userID) {
@@ -53,8 +41,6 @@ export const BaseCurrencySelector = () => {
         { value: "BRL", label: "BRL" },
         { value: "ZAR", label: "ZAR" },
     ];
-
-    if (!isAuth) return <div>Loading...</div>;
 
     return (
         <div style={{ position: "absolute", top: "10px", right: "10px" }}>
