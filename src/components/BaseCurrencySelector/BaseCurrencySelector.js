@@ -61,8 +61,23 @@ export const BaseCurrencySelector = ({ onUpdateBaseCurrency }) => {
                         const expenseData = expenseDoc.data();
                         const convertedAmount =
                             (expenseData.amount / rateToUSD) * rateFromNewBase;
+
+                        // Convert manual splits
+                        const convertedManualSplits = {};
+                        if (expenseData.manualSplits) {
+                            Object.keys(expenseData.manualSplits).forEach(
+                                (member) => {
+                                    convertedManualSplits[member] =
+                                        (expenseData.manualSplits[member] /
+                                            rateToUSD) *
+                                        rateFromNewBase;
+                                }
+                            );
+                        }
+
                         transaction.update(expenseDoc.ref, {
                             amount: convertedAmount,
+                            manualSplits: convertedManualSplits,
                         });
                     });
 

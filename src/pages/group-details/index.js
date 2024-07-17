@@ -1,5 +1,4 @@
 // src/pages/expense-tracker/GroupDetails.jsx
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useFetchGroupDetails } from "../../hooks/useFetchGroupDetails";
@@ -10,7 +9,18 @@ import { useHandleDeleteExpense } from "../../hooks/useHandleDeleteExpense";
 import { useFetchExchangeRates } from "../../hooks/useFetchExchangeRates";
 import { useFetchGroupCurrency } from "../../hooks/useFetchGroupCurrency";
 import Select from "react-select";
-import styles from "./GroupDetails.module.css";
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Typography,
+    Card,
+    CardContent,
+    TextField,
+    MenuItem,
+    CircularProgress,
+} from "@mui/material";
 import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
 import { BaseCurrencySelector } from "../../components/BaseCurrencySelector/BaseCurrencySelector";
 
@@ -75,11 +85,15 @@ export const GroupDetails = () => {
     };
 
     if (error) {
-        return <div>{error}</div>;
+        return (
+            <Typography variant="h6" color="error">
+                {error}
+            </Typography>
+        );
     }
 
     if (!group || loading) {
-        return <div>Loading...</div>;
+        return <CircularProgress />;
     }
 
     const memberOptions = membersDetails.map((member) => ({
@@ -116,219 +130,305 @@ export const GroupDetails = () => {
     }));
 
     return (
-        <div className={styles.groupDetails}>
-            <button
-                className={styles.backButton}
+        <Container maxWidth="lg">
+            <Button
+                variant="contained"
+                color="primary"
                 onClick={() => navigate("/groups")}
+                sx={{ mt: 2 }}
             >
                 Back to Groups
-            </button>
+            </Button>
             <BaseCurrencySelector
                 onUpdateBaseCurrency={handleBaseCurrencyChange}
             />
-            <div className={styles.container}>
-                <h1>{group.name}</h1>
-                <p>{group.description}</p>
-                <p>Members: {group.members.length}</p>
-                <p>Group ID: {group.groupID}</p>
+            <Grid container spacing={3} sx={{ mt: 2 }}>
+                <Grid item xs={12}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h4">{group.name}</Typography>
+                            <Typography variant="subtitle1">
+                                {group.description}
+                            </Typography>
+                            <Typography variant="subtitle2">
+                                Members: {group.members.length}
+                            </Typography>
+                            <Typography variant="subtitle2">
+                                Group ID: {group.groupID}
+                            </Typography>
 
-                <h3>Group Members</h3>
-                <ul className={styles.membersList}>
-                    {membersDetails.map((member) => (
-                        <li key={member.id}>{member.name}</li>
-                    ))}
-                </ul>
-            </div>
-            <div className={styles.container}>
-                <h2>Add an Expense</h2>
-                <form
-                    onSubmit={(e) => {
-                        if (isTotalValid) {
-                            handleAddExpense(
-                                e,
-                                amount,
-                                description,
-                                paidBy,
-                                involvedMembers,
-                                splitType,
-                                manualSplits
-                            );
-                        } else {
-                            e.preventDefault();
-                            alert(
-                                "Total of manual splits must equal the total amount."
-                            );
-                        }
-                    }}
-                    className={styles.expenseForm}
-                >
-                    <div className={styles.formGroup}>
-                        <label>Total Amount:</label>
-                        <input
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>Description:</label>
-                        <input
-                            type="text"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>Paid By:</label>
-                        <select
-                            value={paidBy}
-                            onChange={(e) => setPaidBy(e.target.value)}
-                            required
-                        >
-                            <option value="" disabled>
-                                Select Member
-                            </option>
-                            {membersDetails.map((member) => (
-                                <option key={member.id} value={member.name}>
-                                    {member.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>Involved Members:</label>
-                        <Select
-                            isMulti
-                            value={involvedMembers}
-                            onChange={setInvolvedMembers}
-                            options={memberOptions}
-                            className={styles.multiSelect}
-                        />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>Currency:</label>
-                        <Select
-                            value={{ value: currency, label: currency }}
-                            onChange={(selected) => setCurrency(selected.value)}
-                            options={currencyOptions}
-                            className={styles.multiSelect}
-                        />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>Split Type:</label>
-                        <select
-                            value={splitType}
-                            onChange={(e) => setSplitType(e.target.value)}
-                        >
-                            <option value="equal">Equal</option>
-                            <option value="manual">Manual</option>
-                        </select>
-                    </div>
-                    {splitType === "manual" && (
-                        <div className={styles.manualSplits}>
-                            {involvedMembers.map((member) => (
-                                <div
-                                    key={member.value}
-                                    className={styles.formGroup}
-                                >
-                                    <label>{member.label}'s share:</label>
-                                    <input
-                                        type="number"
-                                        value={manualSplits[member.value] || ""}
-                                        onChange={(e) =>
-                                            handleManualSplitChange(
-                                                member.value,
-                                                e.target.value
-                                            )
-                                        }
-                                        required
-                                    />
-                                </div>
-                            ))}
-                            {!isTotalValid && (
-                                <p className={styles.error}>
-                                    Total of manual splits must equal the total
-                                    amount.
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    <button type="submit">Add Expense</button>
-                </form>
-            </div>
-
-            <div className={styles.container}>
-                <h2>Expenses</h2>
-                <ul className={styles.expensesList}>
-                    {expenses.map((expense) => (
-                        <li key={expense.id}>
-                            <p>Amount: {expense.amount.toFixed(2)}</p>
-                            <p>Description: {expense.description}</p>
-                            <p>Paid By: {expense.paidBy}</p>
-                            {expense.currency &&
-                                expense.currency !== groupCurrency && (
-                                    <p>
-                                        Expense Paid in {expense.currency}{" "}
-                                        converted to {groupCurrency}
-                                    </p>
-                                )}
-                            {expense.splitType === "manual" ? (
-                                <p>
-                                    {expense.involvedMembers.map(
-                                        (member, index) => (
-                                            <span key={index}>
-                                                {member}:{" "}
-                                                {expense.manualSplits
-                                                    ? expense.manualSplits[
-                                                          member
-                                                      ]
-                                                    : "N/A"}
-                                                {index !==
-                                                    expense.involvedMembers
-                                                        .length -
-                                                        1 && ", "}
-                                            </span>
-                                        )
-                                    )}
-                                </p>
-                            ) : (
-                                <p>
-                                    Involved Members:{" "}
-                                    {expense.involvedMembers.join(", ")}
-                                </p>
-                            )}
-                            <p>Split Type: {expense.splitType}</p>
-                            <p>
-                                Date:{" "}
-                                {new Date(
-                                    expense.date.seconds * 1000
-                                ).toLocaleDateString()}
-                            </p>
-                            <button
-                                onClick={() =>
-                                    handleDeleteExpense(
-                                        expense.id,
-                                        expense.involvedMembers,
-                                        expense.paidBy,
-                                        expense.amount,
-                                        expense.splitType,
-                                        expense.manualSplits
-                                    )
-                                }
+                            <Typography variant="h5" sx={{ mt: 2 }}>
+                                Group Members
+                            </Typography>
+                            <ul>
+                                {membersDetails.map((member) => (
+                                    <li key={member.id}>{member.name}</li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5">Add an Expense</Typography>
+                            <form
+                                onSubmit={(e) => {
+                                    if (isTotalValid) {
+                                        handleAddExpense(
+                                            e,
+                                            amount,
+                                            description,
+                                            paidBy,
+                                            involvedMembers,
+                                            splitType,
+                                            manualSplits
+                                        );
+                                    } else {
+                                        e.preventDefault();
+                                        alert(
+                                            "Total of manual splits must equal the total amount."
+                                        );
+                                    }
+                                }}
                             >
-                                Delete
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Total Amount"
+                                            type="number"
+                                            fullWidth
+                                            value={amount}
+                                            onChange={(e) =>
+                                                setAmount(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Description"
+                                            type="text"
+                                            fullWidth
+                                            value={description}
+                                            onChange={(e) =>
+                                                setDescription(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Paid By"
+                                            select
+                                            fullWidth
+                                            value={paidBy}
+                                            onChange={(e) =>
+                                                setPaidBy(e.target.value)
+                                            }
+                                            required
+                                        >
+                                            <MenuItem value="" disabled>
+                                                Select Member
+                                            </MenuItem>
+                                            {membersDetails.map((member) => (
+                                                <MenuItem
+                                                    key={member.id}
+                                                    value={member.name}
+                                                >
+                                                    {member.name}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <label>Involved Members:</label>
+                                        <Select
+                                            isMulti
+                                            value={involvedMembers}
+                                            onChange={setInvolvedMembers}
+                                            options={memberOptions}
+                                            className="multi-select"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <label>Currency:</label>
+                                        <Select
+                                            value={{
+                                                value: currency,
+                                                label: currency,
+                                            }}
+                                            onChange={(selected) =>
+                                                setCurrency(selected.value)
+                                            }
+                                            options={currencyOptions}
+                                            className="multi-select"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Split Type"
+                                            select
+                                            fullWidth
+                                            value={splitType}
+                                            onChange={(e) =>
+                                                setSplitType(e.target.value)
+                                            }
+                                        >
+                                            <MenuItem value="equal">
+                                                Equal
+                                            </MenuItem>
+                                            <MenuItem value="manual">
+                                                Manual
+                                            </MenuItem>
+                                        </TextField>
+                                    </Grid>
+                                    {splitType === "manual" && (
+                                        <Grid item xs={12}>
+                                            <div>
+                                                {involvedMembers.map(
+                                                    (member) => (
+                                                        <TextField
+                                                            key={member.value}
+                                                            label={`${member.label}'s share`}
+                                                            type="number"
+                                                            fullWidth
+                                                            value={
+                                                                manualSplits[
+                                                                    member.value
+                                                                ] || ""
+                                                            }
+                                                            onChange={(e) =>
+                                                                handleManualSplitChange(
+                                                                    member.value,
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            required
+                                                        />
+                                                    )
+                                                )}
+                                                {!isTotalValid && (
+                                                    <Typography color="error">
+                                                        Total of manual splits
+                                                        must equal the total
+                                                        amount.
+                                                    </Typography>
+                                                )}
+                                            </div>
+                                        </Grid>
+                                    )}
+                                    <Grid item xs={12}>
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            Add Expense
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
-            <div className={styles.container}>
-                <GroupBalances groupId={groupId} refreshBalances={refreshKey} />
-            </div>
-        </div>
+                <Grid item xs={12}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5">Expenses</Typography>
+                            <ul>
+                                {expenses.map((expense) => (
+                                    <li key={expense.id}>
+                                        <Typography>
+                                            Amount: ${expense.amount.toFixed(2)}{" "}
+                                            {groupCurrency}
+                                        </Typography>
+                                        <Typography>
+                                            Description: {expense.description}
+                                        </Typography>
+                                        <Typography>
+                                            Paid By: {expense.paidBy}
+                                        </Typography>
+                                        {expense.currency &&
+                                            expense.currency !==
+                                                groupCurrency && (
+                                                <Typography>
+                                                    Expense Paid in{" "}
+                                                    {expense.currency} converted
+                                                    to {groupCurrency}
+                                                </Typography>
+                                            )}
+                                        {expense.splitType === "manual" ? (
+                                            <Typography>
+                                                {expense.involvedMembers.map(
+                                                    (member, index) => (
+                                                        <span key={index}>
+                                                            {member}: $
+                                                            {expense.manualSplits
+                                                                ? expense.manualSplits[
+                                                                      member
+                                                                  ].toFixed(2)
+                                                                : "N/A"}
+                                                            {index !==
+                                                                expense
+                                                                    .involvedMembers
+                                                                    .length -
+                                                                    1 &&
+                                                                ", "}{" "}
+                                                            {groupCurrency}
+                                                        </span>
+                                                    )
+                                                )}
+                                            </Typography>
+                                        ) : (
+                                            <Typography>
+                                                Involved Members:{" "}
+                                                {expense.involvedMembers.join(
+                                                    ", "
+                                                )}
+                                            </Typography>
+                                        )}
+                                        <Typography>
+                                            Split Type: {expense.splitType}
+                                        </Typography>
+                                        <Typography>
+                                            Date:{" "}
+                                            {new Date(
+                                                expense.date.seconds * 1000
+                                            ).toLocaleDateString()}
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() =>
+                                                handleDeleteExpense(
+                                                    expense.id,
+                                                    expense.involvedMembers,
+                                                    expense.paidBy,
+                                                    expense.amount,
+                                                    expense.splitType,
+                                                    expense.manualSplits
+                                                )
+                                            }
+                                        >
+                                            Delete
+                                        </Button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <GroupBalances
+                        groupId={groupId}
+                        refreshBalances={refreshKey}
+                    />
+                </Grid>
+            </Grid>
+        </Container>
     );
 };

@@ -35,12 +35,38 @@ export const useHandleAddExpense = (
                 return;
             }
 
-            // Convert amount to base currency
             const rateToUSD = exchangeRates[currency];
             const rateFromBase = exchangeRates[groupCurrency];
+
+            // Log exchange rates and verify they are loaded
+            console.log("Exchange Rates:", exchangeRates);
+            console.log("Rate to USD:", rateToUSD);
+            console.log("Rate from Base:", rateFromBase);
+
+            // Ensure rates are defined and log a warning if they are not
+            if (!rateToUSD || !rateFromBase) {
+                console.error("Exchange rates are not properly loaded.");
+                return;
+            }
+
             const convertedAmount = (amount / rateToUSD) * rateFromBase;
 
+            // Log the converted amount
+            console.log("Converted Amount:", convertedAmount);
+
             const members = involvedMembers.map((member) => member.value);
+
+            // Convert manual splits to the base currency
+            const convertedManualSplits = {};
+            if (splitType === "manual") {
+                for (const member of members) {
+                    if (manualSplits[member]) {
+                        convertedManualSplits[member] =
+                            (manualSplits[member] / rateToUSD) * rateFromBase;
+                    }
+                }
+            }
+
             const splitAmount = parseFloat(convertedAmount) / members.length;
 
             try {
@@ -88,7 +114,7 @@ export const useHandleAddExpense = (
                         paidBy,
                         involvedMembers: members,
                         splitType,
-                        manualSplits,
+                        manualSplits: convertedManualSplits,
                         currency,
                         date: new Date(),
                     });
@@ -106,7 +132,7 @@ export const useHandleAddExpense = (
 
                             let balanceAmount =
                                 splitType === "manual"
-                                    ? parseFloat(manualSplits[member])
+                                    ? parseFloat(convertedManualSplits[member])
                                     : splitAmount;
                             let reverseBalanceAmount = -balanceAmount;
 

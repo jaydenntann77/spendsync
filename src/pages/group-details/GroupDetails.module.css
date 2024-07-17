@@ -1,104 +1,16 @@
-
-
-.groupDetails {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #ffecd2, #fcb69f);
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
+/* src/pages/expense-tracker/GroupDetails.module.css */
 .container {
-  background-color: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  width: 100%;
-  margin-bottom: 2rem;
+  margin-top: 20px;
 }
 
-.groupDetails h1, .groupDetails h2 {
-  font-size: 2em;
-  margin-bottom: 10px;
+.multi-select {
+  margin-top: 10px;
 }
 
-.groupDetails p {
-  font-size: 1.2em;
-  margin: 5px 0;
+.error {
+  color: red;
 }
 
-.backButton {
-  align-self: flex-start;
-  background-color: #444;
-  border: none;
-  padding: 10px 20px;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  transition: background-color 0.3s;
-}
-
-.backButton:hover {
-  background-color: #555;
-}
-
-.membersList {
-  list-style: none;
-  padding: 0;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.membersList li {
-  background-color: #fff;
-  padding: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 5px;
-  border-radius: 5px;
-}
-
-.expenseForm {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.formGroup {
-  margin-bottom: 15px;
-}
-
-.formGroup label {
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.formGroup input,
-.formGroup select {
-  padding: 10px;
-  font-size: 1em;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.expensesList {
-  list-style: none;
-  padding: 0;
-  width: 100%;
-}
-
-.expensesList li {
-  background-color: #fff;
-  padding: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  border-radius: 5px;
+.balances {
+  margin-top: 20px;
 }

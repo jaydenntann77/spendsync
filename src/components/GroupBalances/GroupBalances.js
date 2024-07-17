@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import styles from "./GroupBalances.module.css";
+import { useFetchGroupCurrency } from "../../hooks/useFetchGroupCurrency";
 
 export const GroupBalances = ({ groupId, refreshBalances }) => {
     const [balances, setBalances] = useState([]);
+    const { groupCurrency } = useFetchGroupCurrency(groupId);
 
     useEffect(() => {
         const fetchBalances = async () => {
@@ -38,7 +40,7 @@ export const GroupBalances = ({ groupId, refreshBalances }) => {
                 {filteredBalances.map((balance) => (
                     <li key={balance.id}>
                         {balance.from} owes {balance.to} $
-                        {balance.amount.toFixed(2)}
+                        {balance.amount.toFixed(2)} {groupCurrency}
                     </li>
                 ))}
             </ul>
