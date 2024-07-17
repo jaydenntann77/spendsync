@@ -12,6 +12,7 @@ import { db } from "../../config/firebase-config";
 import { useFetchGroupCurrency } from "../../hooks/useFetchGroupCurrency";
 import { useParams } from "react-router-dom";
 import { useFetchExchangeRates } from "../../hooks/useFetchExchangeRates";
+import styles from "./BaseCurrencySelector.module.css"; // Import the CSS module
 
 export const BaseCurrencySelector = ({ onUpdateBaseCurrency }) => {
     const { groupId } = useParams(); // Get the groupId from the URL
@@ -102,8 +103,10 @@ export const BaseCurrencySelector = ({ onUpdateBaseCurrency }) => {
     if (loading) return <div>Loading...</div>;
 
     return (
-        <div style={{ position: "absolute", top: "10px", right: "10px" }}>
+        <div className={styles.baseCurrencySelector}>
+            <label className={styles.label}>BASE CURRENCY:</label>
             <Select
+                className={styles.select}
                 value={{ value: groupCurrency, label: groupCurrency }}
                 onChange={(selected) => updateBaseCurrency(selected.value)}
                 options={currencyOptions}
