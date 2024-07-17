@@ -370,14 +370,14 @@ export const GroupDetails = () => {
                                                                 ? expense.manualSplits[
                                                                       member
                                                                   ].toFixed(2)
-                                                                : "N/A"}
+                                                                : "N/A"}{" "}
+                                                            {groupCurrency}
                                                             {index !==
                                                                 expense
                                                                     .involvedMembers
                                                                     .length -
                                                                     1 &&
                                                                 ", "}{" "}
-                                                            {groupCurrency}
                                                         </span>
                                                     )
                                                 )}
