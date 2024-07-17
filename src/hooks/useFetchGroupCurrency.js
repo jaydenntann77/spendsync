@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 
 export const useFetchGroupCurrency = (groupId) => {
@@ -7,20 +7,25 @@ export const useFetchGroupCurrency = (groupId) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchGroupCurrency = async () => {
-            try {
-                const groupDoc = await getDoc(doc(db, "groups", groupId));
-                if (groupDoc.exists()) {
-                    setGroupCurrency(groupDoc.data().baseCurrency || "SGD");
+        const groupDocRef = doc(db, "groups", groupId);
+
+        const unsubscribe = onSnapshot(
+            groupDocRef,
+            (doc) => {
+                if (doc.exists()) {
+                    const newCurrency = doc.data().baseCurrency || "SGD";
+                    setGroupCurrency(newCurrency);
+                    console.log("Updated group currency:", newCurrency); // Log the new currency
                 }
-            } catch (error) {
+                setLoading(false);
+            },
+            (error) => {
                 console.error("Error fetching group currency:", error);
-            } finally {
                 setLoading(false);
             }
-        };
+        );
 
-        fetchGroupCurrency();
+        return () => unsubscribe();
     }, [groupId]);
 
     return { groupCurrency, setGroupCurrency, loading };

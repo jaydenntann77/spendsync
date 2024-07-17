@@ -29,6 +29,12 @@ export const useHandleAddExpense = (
             manualSplits
         ) => {
             e.preventDefault();
+
+            if (loading) {
+                console.log("Currency data is still loading.");
+                return;
+            }
+
             // Convert amount to base currency
             const rateToUSD = exchangeRates[currency];
             const rateFromBase = exchangeRates[groupCurrency];
@@ -156,6 +162,8 @@ export const useHandleAddExpense = (
             setManualSplits,
             currency,
             exchangeRates,
+            groupCurrency,
+            loading,
         ]
     );
 
