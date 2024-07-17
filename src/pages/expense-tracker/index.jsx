@@ -2,8 +2,8 @@ import React from "react";
 import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useDeleteTransaction } from "../../hooks/useDeleteTransaction";
 import styles from "./ExpenseTracker.module.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import "../../App.css";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 import { CategoryPieChart } from "../../components/Dashboard/CategoryPieChart";
@@ -20,12 +20,10 @@ export const ExpenseTracker = () => {
         deleteTransaction(transactionId);
     };
 
-
     const barChartData = [
         { name: "Income", value: income },
         { name: "Expenses", value: expenses },
     ];
-
 
     const expenseByCategory = transactions.reduce((acc, transaction) => {
         if (transaction.transactionType === "expense") {
@@ -92,13 +90,13 @@ export const ExpenseTracker = () => {
                                                     : "green",
                                         }}
                                     >
-                                        {transactionType}
+                                        {transactionType}{" "}
                                     </label>{" "}
                                     | <span>{category}</span>{" "}
-                                    <FontAwesomeIcon 
-                                        icon={faTrashAlt} 
-                                        className={styles.deleteIcon} 
-                                        onClick={() => handleDelete(id)} 
+                                    <FontAwesomeIcon
+                                        icon={faTrashAlt}
+                                        className={styles.deleteIcon}
+                                        onClick={() => handleDelete(id)}
                                     />
                                 </p>
                             </li>
