@@ -1,3 +1,4 @@
+// src/components/Taskbar/Taskbar.js
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
@@ -9,8 +10,8 @@ import {
     faDollarSign,
     faUsers,
     faSignOutAlt,
+    faMapMarkerAlt, // Import the icon for Nearby
 } from "@fortawesome/free-solid-svg-icons";
-import "./Taskbar.css";
 import "./Taskbar.css";
 
 export const Taskbar = () => {
@@ -72,6 +73,12 @@ export const Taskbar = () => {
                     <button className="link-button">
                         <FontAwesomeIcon icon={faUsers} className="icon" />
                         <Link to="/groups">Groups</Link>
+                    </button>
+                </li>
+                <li>
+                    <button className="link-button">
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="icon" /> {/* Add Nearby icon */}
+                        <Link to="/nearby">Nearby</Link> {/* Add Nearby link */}
                     </button>
                 </li>
             </ul>

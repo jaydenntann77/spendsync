@@ -1,3 +1,5 @@
+// src/App.js
+import React from "react";
 import "./App.css";
 import { Taskbar } from "./components/Taskbar/Taskbar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -8,6 +10,7 @@ import { Groups } from "./pages/groups/index";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
 import { GroupDetails } from "./pages/group-details";
 import { AddCategory } from "./pages/add-category/AddCategory";
+import { Nearby } from "./pages/Nearby";
 
 function App() {
     const { isAuth } = useGetUserInfo();
@@ -25,6 +28,7 @@ function App() {
                             <Route path="/add-category" element={<AddCategory />} />
                             <Route path="/groups" element={<Groups />} />
                             <Route path="/group/:groupId" element={<GroupDetails />} />
+                            <Route path="/nearby" element={<Nearby />} />
                         </Routes>
                     </div>
                 </div>
