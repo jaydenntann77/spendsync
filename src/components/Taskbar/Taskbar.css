@@ -1,179 +1,60 @@
-.taskbar {
-  width: 200px;
-  height: 100vh;
-  background-color: #EBE9E1;
-  color: white;
-  position: fixed;
-  top: 0;
-  left: 0;
+/* Taskbar.css */
+body {
+  padding-top: 56px; /* Adjust based on your navbar height */
+}
+
+.navbar {
+  width: 100%;
+}
+
+.navbar-brand {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.nav-link {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding-top: 20px;
-  transition: transform 0.3s ease;
-  transform: translateX(-100%); /* Hide the taskbar by default */
 }
 
-.taskbar.open {
-  transform: translateX(0); /* Show the taskbar when open */
+.nav-link .fa {
+  margin-right: 8px;
 }
 
-.toggle-button {
-  position: absolute;
-  top: 20px;
-  left: 200px;
-  background-color: #EBE9E1;
-  color: #444;
-  padding: 10px;
-  cursor: pointer;
-  z-index: 1;
+.navbar-collapse {
+  justify-content: space-between;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.rounded-circle {
+  margin-right: 8px;
 }
 
-li {
-  margin: 15px 0;
-}
-
-.link-button {
-  background-color: white;
-  border: none;
-  padding: 10px 20px;
-  color: #313131;
-  text-align: left; 
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-  width: 100%;
+.btn-outline-danger {
   display: flex;
-  align-items: center; /* Align items center to align icon and text */
-  transition: background-color 0.3s;
-}
-
-.link-button a {
-  color: #313131; /* Set the link color explicitly to dark grey */
-  text-decoration: none;
-  display: block;
-  width: 100%;
-}
-
-.link-button:hover {
-  background-color: #d1cfc7;
-}
-
-.link-button a:hover {
-  text-decoration: none;
-}
-
-.link-button .icon {
-  margin-right: 10px; /* Space between icon and text */
-}
-
-.link-text {
-  flex-grow: 1; /* Ensure the text takes up remaining space */
-}
-
-.profile-section {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 10px;
-  margin-top: auto; /* Ensures the profile section is at the bottom */
 }
 
-.profile-photo {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-bottom: 10px;
+.btn-outline-danger .fa {
+  margin-right: 5px;
 }
 
-.sign-out-button {
-  background-color: white;
-  border: none;
-  padding: 10px 20px;
-  color: #444;
-  text-align: left;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-  width: 100%;
-  display: flex;
-  align-items: center; 
-  transition: background-color 0.3s;
+.nav-link {
+  color: #0c2c4d; /* Default text color */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+  padding: 10px 10px; /* Increase padding */
+  border-radius: 8px; /* Rounded corners */
+  margin: 0 10px; /* Increase margin between tabs */
 }
 
-.sign-out-button .icon {
-  margin-right: 10px; 
+.nav-link:hover {
+  background-color: #e0e0e0; /* Light background on hover */
+  color: #0c2c4d; /* Text color on hover */
 }
 
-.sign-out-button:hover {
-  background-color: #d1cfc7;
+.nav-link.active {
+  color: #fff; /* Text color for active link */
+  background-color: #19c9ac; /* Background color for active link */
+  font-weight: bold;
 }
 
-.styles.deleteIcon {
-  margin-left: 20px;
-}
 
-/* Media query for mobile devices */
-@media (max-width: 768px) {
-  .taskbar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    transform: translateY(-100%); /* Hide the taskbar by default */
-    flex-direction: row;
-    padding-top: 10px;
-  }
-
-  .taskbar.open {
-    transform: translateY(0); /* Show the taskbar when open */
-  }
-
-  .toggle-button {
-    top: 10px;
-    left: calc(100% - 50px);
-    width: 50px;
-    height: 50px;
-  }
-
-  ul {
-    flex-direction: row;
-    justify-content: space-around;
-    width: 100%;
-  }
-
-  li {
-    margin: 0;
-  }
-
-  .link-button {
-    padding: 5px 10px;
-    font-size: 14px;
-  }
-
-  .profile-section {
-    flex-direction: row;
-    align-items: center;
-    margin-top: 0;
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .profile-photo {
-    width: 40px;
-    height: 40px;
-  }
-
-  .sign-out-button {
-    padding: 5px 10px;
-    font-size: 14px;
-  }
-
-  .sign-out-button .icon {
-    margin-right: 5px;
-  }
-}

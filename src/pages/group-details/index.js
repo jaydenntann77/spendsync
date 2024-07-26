@@ -135,7 +135,7 @@ export const GroupDetails = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => navigate("/groups")}
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, backgroundColor: "#4caf50", color: "#fff" }}
             >
                 Back to Groups
             </Button>

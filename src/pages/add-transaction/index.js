@@ -4,7 +4,21 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { useAddTransaction } from "../../hooks/useAddTransaction";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
-import styles from "../expense-tracker/ExpenseTracker.module.css";
+import {
+    Container,
+    TextField,
+    Button,
+    Radio,
+    RadioGroup,
+    FormControlLabel,
+    FormControl,
+    FormLabel,
+    Select,
+    MenuItem,
+    Box,
+    Typography,
+    Paper,
+} from "@mui/material";
 
 export const AddTransaction = () => {
     const { addTransaction } = useAddTransaction();
@@ -12,7 +26,7 @@ export const AddTransaction = () => {
     const { userID } = useGetUserInfo();
 
     const [description, setDescription] = useState("");
-    const [transactionAmount, setTransactionAmount] = useState(0);
+    const [transactionAmount, setTransactionAmount] = useState(""); // Change initial state to empty string
     const [transactionType, setTransactionType] = useState("expense");
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
@@ -36,86 +50,114 @@ export const AddTransaction = () => {
         };
 
         fetchCategories();
-    }, [userID, transactionType]); // Depend on userID and transactionType
+    }, [userID, transactionType]);
 
     const onSubmit = (e) => {
         e.preventDefault();
         addTransaction({
             description,
-            transactionAmount,
+            transactionAmount: parseFloat(transactionAmount), // Convert to number before submitting
             transactionType,
             category: selectedCategory,
         });
 
-        // Reset form inputs after submitting
         setDescription("");
-        setTransactionAmount(0);
+        setTransactionAmount(""); // Reset to empty string
         setSelectedCategory("");
     };
 
     return (
-        <div className={styles.expenseTracker}>
-            <div className={styles.container}>
-                <h1>Add a Transaction!</h1>
-                <form className={styles.addTransaction} onSubmit={onSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Description"
+        <Container component="main" maxWidth="sm">
+            <Paper
+                elevation={3}
+                sx={{
+                    padding: 4,
+                    marginTop: 4,
+                    backgroundColor: "rgba(30, 30, 60, 0.9)", // Custom aesthetic color
+                }}
+            >
+                <Typography component="h1" variant="h5">
+                    Add a Transaction!
+                </Typography>
+                <Box component="form" onSubmit={onSubmit} sx={{ mt: 2 }}>
+                    <TextField
+                        fullWidth
+                        label="Description"
+                        variant="outlined"
                         value={description}
                         required
                         onChange={(e) => setDescription(e.target.value)}
+                        margin="normal"
                     />
-                    <input
+                    <TextField
+                        fullWidth
+                        label="Amount"
                         type="number"
-                        placeholder="Amount"
-                        value={transactionAmount}
+                        variant="outlined"
+                        value={transactionAmount} // Handle as string
                         required
                         onChange={(e) => setTransactionAmount(e.target.value)}
+                        margin="normal"
                     />
-                    <div>
-                        <input
-                            type="radio"
-                            id="expense"
-                            value="expense"
-                            checked={transactionType === "expense"}
+                    <FormControl component="fieldset" sx={{ mt: 2 }}>
+                        <FormLabel component="legend">Type</FormLabel>
+                        <RadioGroup
+                            row
+                            value={transactionType}
                             onChange={(e) => setTransactionType(e.target.value)}
-                        />
-                        <label htmlFor="expense">Expense</label>
-                        <input
-                            type="radio"
-                            id="income"
-                            value="income"
-                            checked={transactionType === "income"}
-                            onChange={(e) => setTransactionType(e.target.value)}
-                        />
-                        <label htmlFor="income">Income</label>
-                    </div>
-                    <div>
-                        <select
+                        >
+                            <FormControlLabel
+                                value="expense"
+                                control={<Radio />}
+                                label="Expense"
+                            />
+                            <FormControlLabel
+                                value="income"
+                                control={<Radio />}
+                                label="Income"
+                            />
+                        </RadioGroup>
+                    </FormControl>
+                    <FormControl fullWidth sx={{ mt: 2 }}>
+                        <Select
                             value={selectedCategory}
                             onChange={(e) =>
                                 setSelectedCategory(e.target.value)
                             }
+                            displayEmpty
                         >
-                            <option value="" disabled>
+                            <MenuItem value="" disabled>
                                 Select Category
-                            </option>
+                            </MenuItem>
                             {categories.map((category) => (
-                                <option key={category.id} value={category.name}>
+                                <MenuItem
+                                    key={category.id}
+                                    value={category.name}
+                                >
                                     {category.name}
-                                </option>
+                                </MenuItem>
                             ))}
-                        </select>
-                        <button
-                            type="button"
+                        </Select>
+                        <Button
+                            sx={{ mt: 1 }}
+                            variant="contained"
+                            color="primary"
                             onClick={() => navigate("/add-category")}
                         >
                             Add Category
-                        </button>
-                    </div>
-                    <button type="submit">Add Transaction</button>
-                </form>
-            </div>
-        </div>
+                        </Button>
+                    </FormControl>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="success"
+                        sx={{ mt: 3 }}
+                    >
+                        Add Transaction
+                    </Button>
+                </Box>
+            </Paper>
+        </Container>
     );
 };

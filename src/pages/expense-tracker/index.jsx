@@ -1,18 +1,31 @@
 import React from "react";
 import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useDeleteTransaction } from "../../hooks/useDeleteTransaction";
-import styles from "./ExpenseTracker.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import "../../App.css";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 import { CategoryPieChart } from "../../components/Dashboard/CategoryPieChart";
 import { IncomeExpenseBarChart } from "../../components/Dashboard/IncomeExpenseBarChart";
+import {
+    Container,
+    Typography,
+    Paper,
+    Grid,
+    Card,
+    CardContent,
+    IconButton,
+    Box,
+    Button,
+    useTheme,
+} from "@mui/material";
+import { teal, amber } from "@mui/material/colors";
+import styles from "./ExpenseTracker.module.css";
 
 export const ExpenseTracker = () => {
     const { transactions, transactionTotal } = useGetTransactions();
     const { deleteTransaction } = useDeleteTransaction();
     const { name } = useGetUserInfo();
+    const theme = useTheme();
 
     const { balance, income, expenses } = transactionTotal;
 
@@ -42,68 +55,148 @@ export const ExpenseTracker = () => {
     }));
 
     return (
-        <div className={styles.expenseTracker}>
-            <div className={styles.container}>
-                <h1>{name}'s Expense Tracker</h1>
+        <Container maxWidth="lg" sx={{ paddingTop: theme.spacing(8) }}>
+            <Typography variant="h1" gutterBottom>
+                {name}'s Expense Tracker
+            </Typography>
+            <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={4}>
+                        <Paper elevation={3} sx={{ p: 2 }}>
+                            <Typography
+                                variant="h5"
+                                align="center"
+                                sx={{ fontWeight: "bold" }}
+                            >
+                                Your Balance
+                            </Typography>
+                            <Typography
+                                variant="h4"
+                                align="center"
+                                sx={{
+                                    color: balance >= 0 ? "green" : "red",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {balance >= 0 ? `$${balance}` : `-$${-balance}`}
+                            </Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={6} md={4}>
+                        <Paper
+                            elevation={3}
+                            sx={{ p: 2, backgroundColor: teal[100] }}
+                        >
+                            <Typography
+                                variant="h5"
+                                align="center"
+                                sx={{ color: "black", fontWeight: "bold" }}
+                            >
+                                Income
+                            </Typography>
+                            <Typography
+                                variant="h4"
+                                align="center"
+                                sx={{ color: "green", fontWeight: "bold" }}
+                            >
+                                ${income}
+                            </Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={6} md={4}>
+                        <Paper
+                            elevation={3}
+                            sx={{ p: 2, backgroundColor: amber[100] }}
+                        >
+                            <Typography
+                                variant="h5"
+                                align="center"
+                                sx={{ color: "black", fontWeight: "bold" }}
+                            >
+                                Expenses
+                            </Typography>
+                            <Typography
+                                variant="h4"
+                                align="center"
+                                sx={{ color: "red", fontWeight: "bold" }}
+                            >
+                                ${expenses}
+                            </Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper elevation={3} sx={{ p: 2 }}>
+                            <IncomeExpenseBarChart data={barChartData} />
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                p: 2,
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <CategoryPieChart data={pieChartData} />
+                        </Paper>
+                    </Grid>
 
-                <div className={styles.balance}>
-                    <h2>Your Balance</h2>
-                    {balance >= 0 ? <h2>${balance}</h2> : <h2>-${-balance}</h2>}
-                </div>
+                    <Grid item xs={12}>
+                        <Typography variant="h4" gutterBottom>
+                            Transactions
+                        </Typography>
+                        <Paper elevation={3} sx={{ p: 2 }}>
+                            <Box>
+                                {transactions.map((transaction) => {
+                                    const {
+                                        id,
+                                        description,
+                                        transactionAmount,
+                                        transactionType,
+                                        category,
+                                    } = transaction;
 
-                <div className={styles.summary}>
-                    <div className={styles.income}>
-                        <h4>Income</h4>
-                        <p>${income}</p>
-                    </div>
-                    <div className={styles.expenses}>
-                        <h4>Expenses</h4>
-                        <p>${expenses}</p>
-                    </div>
-                </div>
-
-                <IncomeExpenseBarChart data={barChartData} />
-                <CategoryPieChart data={pieChartData} />
-            </div>
-            <div className={styles.transactions}>
-                <h1>Transactions</h1>
-                <ul>
-                    {transactions.map((transaction) => {
-                        const {
-                            id,
-                            description,
-                            transactionAmount,
-                            transactionType,
-                            category, // Add category field
-                        } = transaction;
-
-                        return (
-                            <li key={id}>
-                                <h4>{description}</h4>
-                                <p>
-                                    ${transactionAmount} |{" "}
-                                    <label
-                                        style={{
-                                            color:
-                                                transactionType === "expense"
-                                                    ? "red"
-                                                    : "green",
-                                        }}
-                                    >
-                                        {transactionType}{" "}
-                                    </label>{" "}
-                                    | <span>{category}</span>{" "}
-                                    <FontAwesomeIcon
-                                        icon={faTrashAlt}
-                                        className={styles.deleteIcon}
-                                        onClick={() => handleDelete(id)}
-                                    />
-                                </p>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
-        </div>
+                                    return (
+                                        <Card key={id} sx={{ mb: 2 }}>
+                                            <CardContent>
+                                                <Typography variant="h6">
+                                                    {description}
+                                                </Typography>
+                                                <Typography
+                                                    variant="body1"
+                                                    sx={{
+                                                        color:
+                                                            transactionType ===
+                                                            "expense"
+                                                                ? "red"
+                                                                : "green",
+                                                    }}
+                                                >
+                                                    ${transactionAmount} |{" "}
+                                                    {transactionType} |{" "}
+                                                    {category}
+                                                </Typography>
+                                                <IconButton
+                                                    aria-label="delete"
+                                                    onClick={() =>
+                                                        handleDelete(id)
+                                                    }
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faTrashAlt}
+                                                    />
+                                                </IconButton>
+                                            </CardContent>
+                                        </Card>
+                                    );
+                                })}
+                            </Box>
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </Box>
+        </Container>
     );
 };

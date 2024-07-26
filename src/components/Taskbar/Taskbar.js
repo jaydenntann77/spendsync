@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
@@ -10,86 +10,121 @@ import {
     faUsers,
     faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import "./Taskbar.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./Taskbar.css";
 
 export const Taskbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const { profilePhoto } = useGetUserInfo();
+    const { profilePhoto, userID } = useGetUserInfo();
     const navigate = useNavigate();
-    const taskbarRef = useRef(null);
 
     const signUserOut = async () => {
         try {
             await signOut(auth);
             localStorage.clear(); // clears local storage after signing out
-            navigate("/");
+            navigate("/"); // redirect to auth page
         } catch (err) {
             console.error(err);
         }
     };
 
-    const toggleTaskbar = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const handleClickOutside = (event) => {
-        if (taskbarRef.current && !taskbarRef.current.contains(event.target)) {
-            setIsOpen(false);
-        }
-    };
-
-    useEffect(() => {
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isOpen]);
+    // If userID is not present, user is not authenticated
+    if (!userID) {
+        return null; // Do not render the Taskbar
+    }
 
     return (
-        <div ref={taskbarRef} className={`taskbar ${isOpen ? "open" : ""}`}>
-            <div className="toggle-button" onClick={toggleTaskbar}>
-                {isOpen ? "Close" : "Open"}
-            </div>
-            <ul>
-                <li>
-                    <button className="link-button">
-                        <FontAwesomeIcon icon={faChartBar} className="icon" />
-                        <Link to="/">Dashboard</Link>
-                    </button>
-                </li>
-                <li>
-                    <button className="link-button">
-                        <FontAwesomeIcon icon={faDollarSign} className="icon" />
-                        <Link to="/add-transaction">Add Transaction</Link>
-                    </button>
-                </li>
-                <li>
-                    <button className="link-button">
-                        <FontAwesomeIcon icon={faUsers} className="icon" />
-                        <Link to="/groups">Groups</Link>
-                    </button>
-                </li>
-            </ul>
-            <div className="profile-section">
-                {profilePhoto && (
-                    <div className="profile">
-                        <img
-                            className="profile-photo"
-                            src={profilePhoto}
-                            alt="Profile"
-                        />
-                    </div>
-                )}
-                <button className="sign-out-button" onClick={signUserOut}>
-                    <FontAwesomeIcon icon={faSignOutAlt} className="icon" />
-                    Sign Out
+        <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+            <div className="container-fluid">
+                <a className="navbar-brand" href="#">
+                    SpendSync
+                </a>
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span className="navbar-toggler-icon"></span>
                 </button>
+                <div
+                    className="collapse navbar-collapse"
+                    id="navbarSupportedContent"
+                >
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <NavLink
+                                exact
+                                className="nav-link"
+                                activeClassName="active"
+                                to="/expense-tracker"
+                            >
+                                Home
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink
+                                className="nav-link"
+                                activeClassName="active"
+                                to="/add-transaction"
+                            >
+                                Add Transaction
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink
+                                className="nav-link"
+                                activeClassName="active"
+                                to="/groups"
+                            >
+                                Groups
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink
+                                className="nav-link"
+                                activeClassName="active"
+                                to="/theme-tester"
+                            >
+                                Theme Tester
+                            </NavLink>
+                        </li>
+                    </ul>
+                    <ul className="navbar-nav ml-auto">
+                        {profilePhoto && (
+                            <li className="nav-item">
+                                <NavLink
+                                    className="nav-link"
+                                    activeClassName="active"
+                                    to="/profile"
+                                >
+                                    <img
+                                        src={profilePhoto}
+                                        alt="Profile"
+                                        className="rounded-circle"
+                                        width="40"
+                                        height="40"
+                                    />
+                                </NavLink>
+                            </li>
+                        )}
+                        <li className="nav-item">
+                            <button
+                                className="btn btn-outline-danger"
+                                onClick={signUserOut}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSignOutAlt}
+                                    className="mr-2"
+                                />{" "}
+                                Sign Out
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
+        </nav>
     );
 };
