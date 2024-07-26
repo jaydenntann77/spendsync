@@ -18,15 +18,12 @@ export const Nearby = () => {
 
   useEffect(() => {
     if (bounds) {
-      getPlacesData(bounds.ne, bounds.sw)
+      getPlacesData(bounds.sw, bounds.ne)
         .then((data) => {
           setPlaces(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching places data: ", error);
         });
     }
-  }, [bounds]);
+  }, [bounds, coordinates]);
 
   return (
     <>
