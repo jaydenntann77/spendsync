@@ -17,6 +17,7 @@ import {
     Box,
     Button,
     useTheme,
+    Avatar,
 } from "@mui/material";
 import { teal, amber } from "@mui/material/colors";
 import styles from "./ExpenseTracker.module.css";
@@ -55,9 +56,12 @@ export const ExpenseTracker = () => {
     }));
 
     return (
-        <Container maxWidth="lg" sx={{ paddingTop: theme.spacing(8) }}>
+        <Container
+            maxWidth="xl"
+            sx={{ mt: 4, mb: 4, paddingTop: theme.spacing(8) }}
+        >
             <Typography variant="h1" gutterBottom>
-                {name}'s Expense Tracker
+                {name}'s Expense Dashboard
             </Typography>
             <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={3}>
@@ -144,7 +148,7 @@ export const ExpenseTracker = () => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Typography variant="h4" gutterBottom>
+                        <Typography variant="h1" gutterBottom>
                             Transactions
                         </Typography>
                         <Paper elevation={3} sx={{ p: 2 }}>
@@ -157,15 +161,42 @@ export const ExpenseTracker = () => {
                                         transactionType,
                                         category,
                                     } = transaction;
-
                                     return (
-                                        <Card key={id} sx={{ mb: 2 }}>
-                                            <CardContent>
-                                                <Typography variant="h6">
+                                        <Card
+                                            key={id}
+                                            sx={{
+                                                mb: 2,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                p: 2,
+                                            }}
+                                        >
+                                            <Avatar
+                                                sx={{
+                                                    bgcolor:
+                                                        transactionType ===
+                                                        "expense"
+                                                            ? "red"
+                                                            : "green",
+                                                    mr: 2,
+                                                }}
+                                            >
+                                                <Typography variant="subtitle1">
+                                                    {category[0]}
+                                                </Typography>
+                                            </Avatar>
+                                            <Box sx={{ flexGrow: 1 }}>
+                                                <Typography variant="h4">
                                                     {description}
                                                 </Typography>
                                                 <Typography
-                                                    variant="body1"
+                                                    variant="h5"
+                                                    color="textSecondary"
+                                                >
+                                                    {category}
+                                                </Typography>
+                                                <Typography
+                                                    variant="h4"
                                                     sx={{
                                                         color:
                                                             transactionType ===
@@ -174,21 +205,17 @@ export const ExpenseTracker = () => {
                                                                 : "green",
                                                     }}
                                                 >
-                                                    ${transactionAmount} |{" "}
-                                                    {transactionType} |{" "}
-                                                    {category}
+                                                    ${transactionAmount}
                                                 </Typography>
-                                                <IconButton
-                                                    aria-label="delete"
-                                                    onClick={() =>
-                                                        handleDelete(id)
-                                                    }
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faTrashAlt}
-                                                    />
-                                                </IconButton>
-                                            </CardContent>
+                                            </Box>
+                                            <IconButton
+                                                aria-label="delete"
+                                                onClick={() => handleDelete(id)}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faTrashAlt}
+                                                />
+                                            </IconButton>
                                         </Card>
                                     );
                                 })}
