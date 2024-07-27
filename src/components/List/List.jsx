@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CircularProgress, Grid, Typography, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import { Form } from "react-router-dom";
-import PlaceDetails from "../PlaceDetails /PlaceDetails";
+import PlaceDetails from "../PlaceDetails/place-details";
 
 
 
