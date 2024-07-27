@@ -1,8 +1,9 @@
 import GoogleMapReact from "google-map-react";
 import React, { useEffect } from "react";
 import { useMediaQuery } from "@mui/material";
+import { Google, LocationOnOutlined } from "@mui/icons-material";
 
-const Map = ({ setCoordinates, setBounds, coordinates }) => {
+const Map = ({ setCoordinates, setBounds, coordinates, places }) => {
   const isMobile = useMediaQuery('(min-width:600px)');
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const Map = ({ setCoordinates, setBounds, coordinates }) => {
   return (
     <div style={{ height: '85vh', width: '100%' }}>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: 'YOUR_API_KEY' }} // Replace with your actual API key
+        bootstrapURLKeys={{ key: 'AIzaSyDoWbRMg1iJdZv90HRrUe1fhE6pSbbthZY' }} // Replace with your actual API key
         defaultCenter={coordinates}
         center={coordinates}
         defaultZoom={16} // Set default zoom level to 16 for a closer view
@@ -39,6 +40,8 @@ const Map = ({ setCoordinates, setBounds, coordinates }) => {
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
       />
+    
+      <GoogleMapReact/>
     </div>
   );
 }
