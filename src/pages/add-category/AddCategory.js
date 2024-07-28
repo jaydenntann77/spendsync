@@ -9,7 +9,22 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
-import styles from "./AddCategory.module.css";
+import {
+    Container,
+    TextField,
+    Button,
+    Radio,
+    RadioGroup,
+    FormControlLabel,
+    FormControl,
+    Box,
+    Typography,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+} from "@mui/material";
+import { useSnackbar } from "notistack";
 
 export const AddCategory = () => {
     const navigate = useNavigate();
@@ -17,6 +32,7 @@ export const AddCategory = () => {
     const [newCategory, setNewCategory] = useState("");
     const [categoryType, setCategoryType] = useState("expense");
     const { userID } = useGetUserInfo();
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (!userID) return;
@@ -43,6 +59,20 @@ export const AddCategory = () => {
         e.preventDefault();
         if (!userID) return;
 
+        // Check for duplicate category (case insensitive)
+        const categoryExists = categories.some(
+            (category) =>
+                category.name.toLowerCase() === newCategory.toLowerCase()
+        );
+
+        if (categoryExists) {
+            enqueueSnackbar("Error: Category already exists!", {
+                variant: "error",
+                autoHideDuration: 2000,
+            });
+            return; // Stop further execution
+        }
+
         const categoriesCollectionRef = collection(
             db,
             "users",
@@ -64,6 +94,10 @@ export const AddCategory = () => {
 
         // Reset input
         setNewCategory("");
+        enqueueSnackbar("Category created successfully!", {
+            variant: "success",
+            autoHideDuration: 2000,
+        });
     };
 
     const handleDeleteCategory = async (categoryId) => {
@@ -91,59 +125,153 @@ export const AddCategory = () => {
             ...doc.data(),
         }));
         setCategories(categoriesList);
+        enqueueSnackbar("Category deleted successfully!", {
+            variant: "success",
+            autoHideDuration: 2000,
+        });
     };
 
     return (
-        <div className={styles.addCategory}>
-            <h1>Add a New Category</h1>
-            <form onSubmit={handleAddCategory}>
-                <input
-                    type="text"
-                    placeholder="New Category"
-                    value={newCategory}
-                    required
-                    onChange={(e) => setNewCategory(e.target.value)}
-                />
-                <div>
-                    <input
-                        type="radio"
-                        id="expense"
-                        value="expense"
-                        checked={categoryType === "expense"}
-                        onChange={(e) => setCategoryType(e.target.value)}
-                    />
-                    <label htmlFor="expense">Expense</label>
-                    <input
-                        type="radio"
-                        id="income"
-                        value="income"
-                        checked={categoryType === "income"}
-                        onChange={(e) => setCategoryType(e.target.value)}
-                    />
-                    <label htmlFor="income">Income</label>
-                </div>
-                <button type="submit">Add Category</button>
-            </form>
-            <button onClick={() => navigate("/add-transaction")}>
-                Back to Add Transaction
-            </button>
-            <div>
-                <h2>Existing Categories</h2>
-                <ul>
-                    {categories.map((category) => (
-                        <li key={category.id}>
-                            {category.name}
-                            <button
-                                onClick={() =>
-                                    handleDeleteCategory(category.id)
-                                }
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Card>
+                        <CardHeader
+                            title="Add a New Category"
+                            sx={{
+                                textAlign: "center",
+                                backgroundColor: "#2d6a4f",
+                                color: "#fff",
+                            }}
+                        />
+                        <CardContent>
+                            <Box
+                                component="form"
+                                onSubmit={handleAddCategory}
+                                sx={{ mt: 2 }}
                             >
-                                Delete
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </div>
+                                <TextField
+                                    fullWidth
+                                    label="New Category"
+                                    variant="outlined"
+                                    value={newCategory}
+                                    required
+                                    onChange={(e) =>
+                                        setNewCategory(e.target.value)
+                                    }
+                                    margin="normal"
+                                />
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={6}>
+                                        <FormControl component="fieldset">
+                                            <RadioGroup
+                                                row
+                                                value={categoryType}
+                                                onChange={(e) =>
+                                                    setCategoryType(
+                                                        e.target.value
+                                                    )
+                                                }
+                                            >
+                                                <FormControlLabel
+                                                    value="expense"
+                                                    control={<Radio />}
+                                                    label="Expense"
+                                                />
+                                                <FormControlLabel
+                                                    value="income"
+                                                    control={<Radio />}
+                                                    label="Income"
+                                                />
+                                            </RadioGroup>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="success"
+                                            fullWidth
+                                        >
+                                            Add Category
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                            <Button
+                                onClick={() => navigate("/add-transaction")}
+                                sx={{ mt: 3 }}
+                                variant="outlined"
+                                color="secondary"
+                                fullWidth
+                            >
+                                Back to Add Transaction
+                            </Button>
+                            <Typography
+                                component="h2"
+                                variant="h4"
+                                sx={{ mt: 4 }}
+                            >
+                                Existing Categories
+                            </Typography>
+                            <Grid container spacing={2} sx={{ mt: 2 }}>
+                                {categories.map((category) => (
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={4}
+                                        key={category.id}
+                                    >
+                                        <Card
+                                            sx={{
+                                                backgroundColor: "#1c2237",
+                                                color: "#fff",
+                                                "&:hover": {
+                                                    boxShadow: 6,
+                                                },
+                                            }}
+                                        >
+                                            <CardContent>
+                                                <Typography variant="h5">
+                                                    {category.name}
+                                                </Typography>
+                                                <Typography variant="h6">
+                                                    Type:{" "}
+                                                    <span
+                                                        style={{
+                                                            color:
+                                                                category.type ===
+                                                                "expense"
+                                                                    ? "red"
+                                                                    : "#52b788",
+                                                            fontWeight: "bold",
+                                                        }}
+                                                    >
+                                                        {category.type}
+                                                    </span>
+                                                </Typography>
+                                                <Button
+                                                    variant="contained"
+                                                    color="error"
+                                                    onClick={() =>
+                                                        handleDeleteCategory(
+                                                            category.id
+                                                        )
+                                                    }
+                                                    sx={{ mt: 2 }}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+        </Container>
     );
 };

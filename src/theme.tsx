@@ -25,7 +25,7 @@ const theme = createTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
-      fontSize: '3rem',
+      fontSize: 'rem',
       fontWeight: 700,
       color: '#fff',
     },
@@ -60,7 +60,7 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundColor: 'transparent', // Make Paper component backgrounds transparent to show the gradient
+          backgroundColor: '#0e192b', // Make Paper component backgrounds transparent to show the gradient
         },
       },
     },

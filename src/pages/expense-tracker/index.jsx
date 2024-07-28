@@ -202,7 +202,7 @@ export const ExpenseTracker = () => {
                                                             transactionType ===
                                                             "expense"
                                                                 ? "red"
-                                                                : "green",
+                                                                : "#52b788",
                                                     }}
                                                 >
                                                     ${transactionAmount}

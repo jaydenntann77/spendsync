@@ -87,9 +87,9 @@ export const Taskbar = () => {
                             <NavLink
                                 className="nav-link"
                                 activeClassName="active"
-                                to="/theme-tester"
+                                to="/nearby"
                             >
-                                Theme Tester
+                                Nearby
                             </NavLink>
                         </li>
                     </ul>

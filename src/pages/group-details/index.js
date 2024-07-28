@@ -20,6 +20,7 @@ import {
     TextField,
     MenuItem,
     CircularProgress,
+    CardHeader,
 } from "@mui/material";
 import { GroupBalances } from "../../components/GroupBalances/GroupBalances";
 import { BaseCurrencySelector } from "../../components/BaseCurrencySelector/BaseCurrencySelector";
@@ -130,48 +131,95 @@ export const GroupDetails = () => {
     }));
 
     return (
-        <Container maxWidth="lg">
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate("/groups")}
-                sx={{ mt: 2, backgroundColor: "#4caf50", color: "#fff" }}
-            >
-                Back to Groups
-            </Button>
-            <BaseCurrencySelector
-                onUpdateBaseCurrency={handleBaseCurrencyChange}
-            />
+        <Container maxWidth="lg" sx={{ mt: 2, mb: 4 }}>
+            <Grid container spacing={2} alignItems="center" sx={{ mt: 2 }}>
+                <Grid item xs={4}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate("/groups")}
+                        sx={{
+                            width: "100%",
+                            backgroundColor: "#4caf50",
+                            color: "#fff",
+                        }}
+                    >
+                        Back to Groups
+                    </Button>
+                </Grid>
+                <Grid item xs={8}>
+                    <BaseCurrencySelector
+                        onUpdateBaseCurrency={handleBaseCurrencyChange}
+                    />
+                </Grid>
+            </Grid>
             <Grid container spacing={3} sx={{ mt: 2 }}>
                 <Grid item xs={12}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h4">{group.name}</Typography>
-                            <Typography variant="subtitle1">
-                                {group.description}
-                            </Typography>
-                            <Typography variant="subtitle2">
-                                Members: {group.members.length}
-                            </Typography>
-                            <Typography variant="subtitle2">
-                                Group ID: {group.groupID}
-                            </Typography>
-
-                            <Typography variant="h5" className={{ mt: 2 }}>
-                                Group Members
-                            </Typography>
-                            <ul>
-                                {membersDetails.map((member) => (
-                                    <li key={member.id}>{member.name}</li>
-                                ))}
-                            </ul>
+                    <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+                        <CardHeader
+                            title={group.name}
+                            subheader={group.description}
+                            sx={{
+                                textAlign: "center",
+                                backgroundColor: "#2d6a4f",
+                                color: "#fff",
+                                padding: 2,
+                            }}
+                            titleTypographyProps={{ variant: "h4" }}
+                            subheaderTypographyProps={{
+                                variant: "subtitle1",
+                                fontStyle: "italic",
+                            }}
+                        />
+                        <CardContent sx={{ padding: 3 }}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                    <Typography variant="h6" gutterBottom>
+                                        Members: {group.members.length}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography
+                                        variant="h5"
+                                        color="textSecondary"
+                                    >
+                                        Group ID: {group.groupID}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography
+                                        variant="h5"
+                                        sx={{
+                                            mt: 3,
+                                            mb: 2,
+                                            textAlign: "center",
+                                        }}
+                                    >
+                                        Group Members
+                                    </Typography>
+                                    <ul>
+                                        {membersDetails.map((member) => (
+                                            <li key={member.id}>
+                                                {member.name}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </Grid>
+                            </Grid>
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12}>
                     <Card>
+                        <CardHeader
+                            title="Add an Expense"
+                            sx={{
+                                textAlign: "center",
+                                backgroundColor: "#2d6a4f",
+                                color: "#fff",
+                            }}
+                        />
                         <CardContent>
-                            <Typography variant="h5">Add an Expense</Typography>
                             <form
                                 onSubmit={(e) => {
                                     if (isTotalValid) {
@@ -203,6 +251,24 @@ export const GroupDetails = () => {
                                                 setAmount(e.target.value)
                                             }
                                             required
+                                            InputLabelProps={{
+                                                style: { color: "#fff" },
+                                            }}
+                                            sx={{
+                                                "& .MuiOutlinedInput-root": {
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                    "& fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&:hover fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                },
+                                            }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -215,6 +281,24 @@ export const GroupDetails = () => {
                                                 setDescription(e.target.value)
                                             }
                                             required
+                                            InputLabelProps={{
+                                                style: { color: "#fff" },
+                                            }}
+                                            sx={{
+                                                "& .MuiOutlinedInput-root": {
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                    "& fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&:hover fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                },
+                                            }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -227,6 +311,32 @@ export const GroupDetails = () => {
                                                 setPaidBy(e.target.value)
                                             }
                                             required
+                                            InputLabelProps={{
+                                                style: { color: "#fff" },
+                                            }}
+                                            sx={{
+                                                "& .MuiOutlinedInput-root": {
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                    "& fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&:hover fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                },
+                                                "& .MuiSelect-select": {
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                },
+                                                "& .MuiPaper-root": {
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                },
+                                            }}
                                         >
                                             <MenuItem value="" disabled>
                                                 Select Member
@@ -242,17 +352,60 @@ export const GroupDetails = () => {
                                         </TextField>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <label>Involved Members:</label>
+                                        <Typography
+                                            variant="body1"
+                                            sx={{ color: "#fff", mb: 1 }}
+                                        >
+                                            Involved Members:
+                                        </Typography>
                                         <Select
                                             isMulti
                                             value={involvedMembers}
                                             onChange={setInvolvedMembers}
                                             options={memberOptions}
-                                            className="multi-select"
+                                            classNamePrefix="react-select"
+                                            styles={{
+                                                control: (provided) => ({
+                                                    ...provided,
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                    borderColor: "#fff",
+                                                    "&:hover": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                }),
+                                                singleValue: (provided) => ({
+                                                    ...provided,
+                                                    color: "#fff",
+                                                }),
+                                                menu: (provided) => ({
+                                                    ...provided,
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                    zIndex: 9999, // Ensure the dropdown appears above other elements
+                                                }),
+                                                option: (provided, state) => ({
+                                                    ...provided,
+                                                    backgroundColor:
+                                                        state.isSelected
+                                                            ? "#4caf50"
+                                                            : "#1c2237",
+                                                    color: "#fff",
+                                                    "&:hover": {
+                                                        backgroundColor:
+                                                            "#4caf50",
+                                                    },
+                                                }),
+                                            }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <label>Currency:</label>
+                                        <Typography
+                                            variant="body1"
+                                            sx={{ color: "#fff", mb: 1 }}
+                                        >
+                                            Currency:
+                                        </Typography>
                                         <Select
                                             value={{
                                                 value: currency,
@@ -262,7 +415,40 @@ export const GroupDetails = () => {
                                                 setCurrency(selected.value)
                                             }
                                             options={currencyOptions}
-                                            className="multi-select"
+                                            classNamePrefix="react-select"
+                                            styles={{
+                                                control: (provided) => ({
+                                                    ...provided,
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                    borderColor: "#fff",
+                                                    "&:hover": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                }),
+                                                singleValue: (provided) => ({
+                                                    ...provided,
+                                                    color: "#fff",
+                                                }),
+                                                menu: (provided) => ({
+                                                    ...provided,
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                    zIndex: 9999, // Ensure the dropdown appears above other elements
+                                                }),
+                                                option: (provided, state) => ({
+                                                    ...provided,
+                                                    backgroundColor:
+                                                        state.isSelected
+                                                            ? "#4caf50"
+                                                            : "#1c2237",
+                                                    color: "#fff",
+                                                    "&:hover": {
+                                                        backgroundColor:
+                                                            "#4caf50",
+                                                    },
+                                                }),
+                                            }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -274,6 +460,32 @@ export const GroupDetails = () => {
                                             onChange={(e) =>
                                                 setSplitType(e.target.value)
                                             }
+                                            InputLabelProps={{
+                                                style: { color: "#fff" },
+                                            }}
+                                            sx={{
+                                                "& .MuiOutlinedInput-root": {
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                    "& fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&:hover fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                },
+                                                "& .MuiSelect-select": {
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                },
+                                                "& .MuiPaper-root": {
+                                                    backgroundColor: "#1c2237",
+                                                    color: "#fff",
+                                                },
+                                            }}
                                         >
                                             <MenuItem value="equal">
                                                 Equal
@@ -306,6 +518,35 @@ export const GroupDetails = () => {
                                                                 )
                                                             }
                                                             required
+                                                            InputLabelProps={{
+                                                                style: {
+                                                                    color: "#fff",
+                                                                },
+                                                            }}
+                                                            sx={{
+                                                                "& .MuiOutlinedInput-root":
+                                                                    {
+                                                                        backgroundColor:
+                                                                            "#1c2237",
+                                                                        color: "#fff",
+                                                                        "& fieldset":
+                                                                            {
+                                                                                borderColor:
+                                                                                    "#fff",
+                                                                            },
+                                                                        "&:hover fieldset":
+                                                                            {
+                                                                                borderColor:
+                                                                                    "#fff",
+                                                                            },
+                                                                        "&.Mui-focused fieldset":
+                                                                            {
+                                                                                borderColor:
+                                                                                    "#fff",
+                                                                            },
+                                                                    },
+                                                                mt: 2,
+                                                            }}
                                                         />
                                                     )
                                                 )}
@@ -323,7 +564,16 @@ export const GroupDetails = () => {
                                         <Button
                                             type="submit"
                                             variant="contained"
-                                            color="primary"
+                                            sx={{
+                                                backgroundColor: "#00b4d8",
+                                                color: "#fff",
+                                                "&:hover": {
+                                                    backgroundColor: "#52b788",
+                                                },
+                                                display: "block",
+                                                marginLeft: "auto",
+                                                marginRight: "auto",
+                                            }}
                                         >
                                             Add Expense
                                         </Button>
@@ -336,88 +586,124 @@ export const GroupDetails = () => {
 
                 <Grid item xs={12}>
                     <Card>
+                        <CardHeader
+                            title="Expenses"
+                            sx={{
+                                textAlign: "center",
+                                backgroundColor: "#2d6a4f",
+                                color: "#fff",
+                            }}
+                        />
                         <CardContent>
-                            <Typography variant="h5">Expenses</Typography>
-                            <ul>
+                            <Grid container spacing={3}>
                                 {expenses.map((expense) => (
-                                    <li key={expense.id}>
-                                        <Typography>
-                                            Amount: ${expense.amount.toFixed(2)}{" "}
-                                            {groupCurrency}
-                                        </Typography>
-                                        <Typography>
-                                            Description: {expense.description}
-                                        </Typography>
-                                        <Typography>
-                                            Paid By: {expense.paidBy}
-                                        </Typography>
-                                        {expense.currency &&
-                                            expense.currency !==
-                                                groupCurrency && (
-                                                <Typography>
-                                                    Expense Paid in{" "}
-                                                    {expense.currency} converted
-                                                    to {groupCurrency}
-                                                </Typography>
-                                            )}
-                                        {expense.splitType === "manual" ? (
-                                            <Typography>
-                                                {expense.involvedMembers.map(
-                                                    (member, index) => (
-                                                        <span key={index}>
-                                                            {member}: $
-                                                            {expense.manualSplits
-                                                                ? expense.manualSplits[
-                                                                      member
-                                                                  ].toFixed(2)
-                                                                : "N/A"}{" "}
-                                                            {groupCurrency}
-                                                            {index !==
-                                                                expense
-                                                                    .involvedMembers
-                                                                    .length -
-                                                                    1 &&
-                                                                ", "}{" "}
-                                                        </span>
-                                                    )
-                                                )}
-                                            </Typography>
-                                        ) : (
-                                            <Typography>
-                                                Involved Members:{" "}
-                                                {expense.involvedMembers.join(
-                                                    ", "
-                                                )}
-                                            </Typography>
-                                        )}
-                                        <Typography>
-                                            Split Type: {expense.splitType}
-                                        </Typography>
-                                        <Typography>
-                                            Date:{" "}
-                                            {new Date(
-                                                expense.date.seconds * 1000
-                                            ).toLocaleDateString()}
-                                        </Typography>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={() =>
-                                                handleDeleteExpense(
-                                                    expense.id,
-                                                    expense.involvedMembers,
-                                                    expense.paidBy,
-                                                    expense.amount,
-                                                    expense.splitType,
-                                                    expense.manualSplits
-                                                )
-                                            }
+                                    <Grid item xs={12} md={6} key={expense.id}>
+                                        <Card
+                                            sx={{
+                                                backgroundColor: "#1c2237",
+                                                color: "#fff",
+                                                padding: 2,
+                                                "&:hover": {
+                                                    boxShadow: 6,
+                                                },
+                                            }}
                                         >
-                                            Delete
-                                        </Button>
-                                    </li>
+                                            <CardContent>
+                                                <Typography
+                                                    variant="h6"
+                                                    gutterBottom
+                                                >
+                                                    Amount: $
+                                                    {expense.amount.toFixed(2)}{" "}
+                                                    {groupCurrency}
+                                                </Typography>
+                                                <Typography variant="body1">
+                                                    Description:{" "}
+                                                    {expense.description}
+                                                </Typography>
+                                                <Typography variant="body1">
+                                                    Paid By: {expense.paidBy}
+                                                </Typography>
+                                                {expense.currency &&
+                                                    expense.currency !==
+                                                        groupCurrency && (
+                                                        <Typography variant="body1">
+                                                            Expense Paid in{" "}
+                                                            {expense.currency}{" "}
+                                                            converted to{" "}
+                                                            {groupCurrency}
+                                                        </Typography>
+                                                    )}
+                                                {expense.splitType ===
+                                                "manual" ? (
+                                                    <Typography variant="body1">
+                                                        {expense.involvedMembers.map(
+                                                            (member, index) => (
+                                                                <span
+                                                                    key={index}
+                                                                >
+                                                                    {member}: $
+                                                                    {expense.manualSplits
+                                                                        ? expense.manualSplits[
+                                                                              member
+                                                                          ].toFixed(
+                                                                              2
+                                                                          )
+                                                                        : "N/A"}{" "}
+                                                                    {
+                                                                        groupCurrency
+                                                                    }
+                                                                    {index !==
+                                                                        expense
+                                                                            .involvedMembers
+                                                                            .length -
+                                                                            1 &&
+                                                                        ", "}{" "}
+                                                                </span>
+                                                            )
+                                                        )}
+                                                    </Typography>
+                                                ) : (
+                                                    <Typography variant="body1">
+                                                        Involved Members:{" "}
+                                                        {expense.involvedMembers.join(
+                                                            ", "
+                                                        )}
+                                                    </Typography>
+                                                )}
+                                                <Typography variant="body1">
+                                                    Split Type:{" "}
+                                                    {expense.splitType}
+                                                </Typography>
+                                                <Typography variant="body1">
+                                                    Date:{" "}
+                                                    {new Date(
+                                                        expense.date.seconds *
+                                                            1000
+                                                    ).toLocaleDateString()}
+                                                </Typography>
+                                                <Button
+                                                    variant="contained"
+                                                    color="error"
+                                                    onClick={() =>
+                                                        handleDeleteExpense(
+                                                            expense.id,
+                                                            expense.involvedMembers,
+                                                            expense.paidBy,
+                                                            expense.amount,
+                                                            expense.splitType,
+                                                            expense.manualSplits
+                                                        )
+                                                    }
+                                                    sx={{ mt: 2 }}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
                                 ))}
-                            </ul>
+                            </Grid>
                         </CardContent>
                     </Card>
                 </Grid>

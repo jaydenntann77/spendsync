@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "react-select";
+import { useParams } from "react-router-dom";
 import {
     updateDoc,
     doc,
@@ -10,9 +10,15 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import { useFetchGroupCurrency } from "../../hooks/useFetchGroupCurrency";
-import { useParams } from "react-router-dom";
 import { useFetchExchangeRates } from "../../hooks/useFetchExchangeRates";
-import styles from "./BaseCurrencySelector.module.css"; // Import the CSS module
+import {
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    CircularProgress,
+    Typography,
+} from "@mui/material";
 
 export const BaseCurrencySelector = ({ onUpdateBaseCurrency }) => {
     const { groupId } = useParams(); // Get the groupId from the URL
@@ -22,6 +28,7 @@ export const BaseCurrencySelector = ({ onUpdateBaseCurrency }) => {
 
     const updateBaseCurrency = async (newCurrency) => {
         if (groupId) {
+            console.log("Updating base currency to:", newCurrency);
             const groupDocRef = doc(db, "groups", groupId);
             const groupDoc = await getDoc(groupDocRef);
 
@@ -93,39 +100,47 @@ export const BaseCurrencySelector = ({ onUpdateBaseCurrency }) => {
     };
 
     const currencyOptions = [
-        { value: "USD", label: "USD" },
-        { value: "EUR", label: "EUR" },
-        { value: "GBP", label: "GBP" },
-        { value: "JPY", label: "JPY" },
-        { value: "AUD", label: "AUD" },
-        { value: "CAD", label: "CAD" },
-        { value: "CHF", label: "CHF" },
-        { value: "CNY", label: "CNY" },
-        { value: "SEK", label: "SEK" },
-        { value: "NZD", label: "NZD" },
-        { value: "MXN", label: "MXN" },
-        { value: "SGD", label: "SGD" },
-        { value: "HKD", label: "HKD" },
-        { value: "NOK", label: "NOK" },
-        { value: "KRW", label: "KRW" },
-        { value: "TRY", label: "TRY" },
-        { value: "RUB", label: "RUB" },
-        { value: "INR", label: "INR" },
-        { value: "BRL", label: "BRL" },
-        { value: "ZAR", label: "ZAR" },
+        "USD",
+        "EUR",
+        "GBP",
+        "JPY",
+        "AUD",
+        "CAD",
+        "CHF",
+        "CNY",
+        "SEK",
+        "NZD",
+        "MXN",
+        "SGD",
+        "HKD",
+        "NOK",
+        "KRW",
+        "TRY",
+        "RUB",
+        "INR",
+        "BRL",
+        "ZAR",
     ];
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <CircularProgress />;
 
     return (
-        <div className={styles.baseCurrencySelector}>
-            <label className={styles.label}>BASE CURRENCY:</label>
+        <FormControl fullWidth variant="outlined" margin="normal">
+            <InputLabel>Base Currency</InputLabel>
             <Select
-                className={styles.select}
-                value={{ value: groupCurrency, label: groupCurrency }}
-                onChange={(selected) => updateBaseCurrency(selected.value)}
-                options={currencyOptions}
-            />
-        </div>
+                value={groupCurrency}
+                onChange={(e) => updateBaseCurrency(e.target.value)}
+                label="Base Currency"
+            >
+                {currencyOptions.map((currency) => (
+                    <MenuItem key={currency} value={currency}>
+                        {currency}
+                    </MenuItem>
+                ))}
+            </Select>
+            <Typography variant="caption">
+                Select the base currency for the group.
+            </Typography>
+        </FormControl>
     );
 };
