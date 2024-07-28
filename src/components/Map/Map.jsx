@@ -1,26 +1,44 @@
 import GoogleMapReact from "google-map-react";
-import React, { useEffect } from "react";
-import { useMediaQuery } from "@mui/material";
-import { Google, LocationOnOutlined } from "@mui/icons-material";
+import React, { useEffect, useRef } from "react";
+import { Typography, useMediaQuery, Paper } from "@mui/material";
+import { LocationOnOutlined } from "@mui/icons-material";
+import Rating from '@mui/material/Rating';
 
-const Map = ({ setCoordinates, setBounds, coordinates, places }) => {
-  const isMobile = useMediaQuery('(min-width:600px)');
+const Marker = ({ place, isDesktop }) => (
+  !isDesktop ? (
+    <LocationOnOutlined color="primary" fontSize="large" />
+  ) : (
+    <Paper elevation={3} style={{ padding: '10px' }}>
+      <Typography variant="subtitle2" gutterBottom>
+        {place.name}
+      </Typography>
+      <img
+        src={place.photo ? place.photo.images.large.url : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHn3jT5zsWbNi1MEAlb0H4I8iOpylZ3GC9iQ&s"}
+        alt={place.name}
+        style={{ width: 100 }}
+      />
+      <Rating size="small" value={Number(place.rating)} readOnly />
+    </Paper>
+  )
+);
+
+const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }) => {
+  const isDesktop = useMediaQuery('(min-width:600px)');
+  const mapRef = useRef();
 
   useEffect(() => {
-    // Adjust the map center and zoom level when coordinates change
-    if (mapRef.current) {
+    if (mapRef.current && coordinates.lat && coordinates.lng) {
       mapRef.current.panTo({ lat: coordinates.lat, lng: coordinates.lng });
       mapRef.current.setZoom(16); // Set zoom level to 16 for a closer view
     }
   }, [coordinates]);
 
-  const mapRef = React.useRef();
-
   const handleApiLoaded = (map, maps) => {
     mapRef.current = map;
-    // Center the map to the current coordinates and set the initial zoom level
-    map.setCenter(coordinates);
-    map.setZoom(16);
+    if (coordinates) {
+      map.setCenter(coordinates);
+      map.setZoom(16);
+    }
   };
 
   return (
@@ -36,12 +54,20 @@ const Map = ({ setCoordinates, setBounds, coordinates, places }) => {
           setCoordinates({ lat: e.center.lat, lng: e.center.lng });
           setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
         }}
-        onChildClick={() => {}}
+        onChildClick={(child) => setChildClicked(child)}
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
-      />
-    
-      <GoogleMapReact/>
+      >
+        {places?.map((place, i) => (
+          <div
+            lat={Number(place.latitude)}
+            lng={Number(place.longitude)}
+            key={i}
+          >
+            <Marker place={place} isDesktop={isDesktop} />
+          </div>
+        ))}
+      </GoogleMapReact>
     </div>
   );
 }
