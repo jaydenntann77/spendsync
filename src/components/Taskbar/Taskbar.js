@@ -9,6 +9,7 @@ import {
     faDollarSign,
     faUsers,
     faSignOutAlt,
+    faMapMarkerAlt, // Import the icon for Nearby
 } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Taskbar.css";

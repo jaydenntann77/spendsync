@@ -1,3 +1,6 @@
+// src/App.js
+import "./App.css";
+import { Taskbar } from "./components/Taskbar/Taskbar";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles"; // Import ThemeProvider from MUI
@@ -12,6 +15,7 @@ import { GroupDetails } from "./pages/group-details";
 import { AddCategory } from "./pages/add-category/AddCategory";
 import "bootstrap/dist/css/bootstrap.min.css";
 import theme from "./theme.tsx"; // Import your theme
+import { Nearby } from "./pages/nearby";
 
 function App() {
     const { isAuth } = useGetUserInfo();
@@ -57,10 +61,7 @@ function App() {
                                     path="/group/:groupId"
                                     element={<GroupDetails />}
                                 />
-                                <Route
-                                    path="/theme-tester"
-                                    element={<ThemeTester />}
-                                />
+                                <Route path="/nearby" element={<Nearby />} />
                             </Routes>
                         </div>
                     </div>

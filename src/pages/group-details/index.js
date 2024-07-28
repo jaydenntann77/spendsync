@@ -157,7 +157,7 @@ export const GroupDetails = () => {
                                 Group ID: {group.groupID}
                             </Typography>
 
-                            <Typography variant="h5" sx={{ mt: 2 }}>
+                            <Typography variant="h5" className={{ mt: 2 }}>
                                 Group Members
                             </Typography>
                             <ul>
