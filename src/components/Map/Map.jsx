@@ -4,24 +4,6 @@ import { Typography, useMediaQuery, Paper } from "@mui/material";
 import { LocationOnOutlined } from "@mui/icons-material";
 import Rating from '@mui/material/Rating';
 
-const Marker = ({ place, isDesktop }) => (
-  !isDesktop ? (
-    <LocationOnOutlined color="primary" fontSize="large" />
-  ) : (
-    <Paper elevation={3} style={{ padding: '10px' }}>
-      <Typography variant="subtitle2" gutterBottom>
-        {place.name}
-      </Typography>
-      <img
-        src={place.photo ? place.photo.images.large.url : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHn3jT5zsWbNi1MEAlb0H4I8iOpylZ3GC9iQ&s"}
-        alt={place.name}
-        style={{ width: 100 }}
-      />
-      <Rating size="small" value={Number(place.rating)} readOnly />
-    </Paper>
-  )
-);
-
 const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }) => {
   const isDesktop = useMediaQuery('(min-width:600px)');
   const mapRef = useRef();
@@ -64,7 +46,21 @@ const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }
             lng={Number(place.longitude)}
             key={i}
           >
-            <Marker place={place} isDesktop={isDesktop} />
+            {!isDesktop ? (
+              <LocationOnOutlined color="primary" fontSize="large" />
+            ) : (
+              <Paper elevation={3} style={{ padding: '10px' }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  {place.name}
+                </Typography>
+                <img
+                  src={place.photo ? place.photo.images.large.url : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHn3jT5zsWbNi1MEAlb0H4I8iOpylZ3GC9iQ&s'}
+                  alt={place.name}
+                  style={{ width: 100 }}
+                />
+                <Rating size="small" value={Number(place.rating)} readOnly />
+              </Paper>
+            )}
           </div>
         ))}
       </GoogleMapReact>

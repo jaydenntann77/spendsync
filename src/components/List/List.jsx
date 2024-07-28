@@ -2,7 +2,7 @@ import React, { useState, useEffect, createRef } from "react";
 import { CircularProgress, Grid, Typography, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import PlaceDetails from "../PlaceDetails/place-details";
 
-export const List = ({ places, childClicked, isLoading,type, seType, rating, setRating }) => {
+export const List = ({ places, childClicked, isLoading, type, setType, rating, setRating }) => {
   const [elRefs, setElRefs] = useState([]);
 
   useEffect(() => {
@@ -56,5 +56,3 @@ export const List = ({ places, childClicked, isLoading,type, seType, rating, set
     </div>
   );
 };
-
-

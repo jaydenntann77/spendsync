@@ -34,6 +34,11 @@ const PlaceDetails = ({ place, selected, refProp }) => {
             <LocationOn />{place.address}
           </Typography>
         )}
+        {place.distance && (
+          <Typography gutterBottom variant="body2" color="textSecondary">
+            Distance: {place.distance.toFixed(2)} km
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );
