@@ -5,11 +5,6 @@ import PlaceDetails from "../PlaceDetails/place-details";
 export const List = ({ places, childClicked, isLoading, type, setType, rating, setRating }) => {
   const [elRefs, setElRefs] = useState([]);
 
-  useEffect(() => {
-    const refs = Array(places?.length).fill().map((_, i) => elRefs[i] || createRef());
-    setElRefs(refs);
-  }, [places]);
-
   return (
     <div style={{ padding: "20px" }}>
       <Typography variant="h4" style={{ marginBottom: "20px", textAlign: "left", fontSize: "24px" }}>

@@ -29,6 +29,7 @@ export const Nearby = () => {
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const [bounds, setBounds] = useState(null);
   const [childClicked, setChildClicked] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }) => {
@@ -38,6 +39,7 @@ export const Nearby = () => {
 
   useEffect(() => {
     if (bounds) {
+      setIsLoading(true);
       getPlacesData(bounds.ne, bounds.sw)
         .then((data) => {
           const placesWithDistance = data.map(place => ({
@@ -47,7 +49,8 @@ export const Nearby = () => {
               lng: place.longitude
             })
           }));
-          setPlaces(placesWithDistance);
+          setPlaces(placesWithDistance.sort((a, b) => a.distance - b.distance));
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching places data: ", error);
@@ -60,7 +63,7 @@ export const Nearby = () => {
       <CssBaseline />
       <Grid container spacing={3} style={{ width: '100%' }}>
         <Grid item xs={12} md={4}>
-          <List places={places} childClicked={childClicked} />
+          <List places={places} childClicked={childClicked} isLoading={isLoading} />
         </Grid>
         <Grid item xs={12} md={8}>
           <Map 
@@ -74,4 +77,4 @@ export const Nearby = () => {
       </Grid>
     </>
   );
-};
+}
