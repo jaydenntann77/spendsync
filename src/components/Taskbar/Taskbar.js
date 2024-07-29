@@ -62,7 +62,7 @@ export const Taskbar = () => {
                                 activeClassName="active"
                                 to="/expense-tracker"
                             >
-                                Home
+                                Dashboard
                             </NavLink>
                         </li>
                         <li className="nav-item">
@@ -96,11 +96,6 @@ export const Taskbar = () => {
                     <ul className="navbar-nav ml-auto">
                         {profilePhoto && (
                             <li className="nav-item">
-                                <NavLink
-                                    className="nav-link"
-                                    activeClassName="active"
-                                    to="/profile"
-                                >
                                     <img
                                         src={profilePhoto}
                                         alt="Profile"
@@ -108,7 +103,6 @@ export const Taskbar = () => {
                                         width="40"
                                         height="40"
                                     />
-                                </NavLink>
                             </li>
                         )}
                         <li className="nav-item">
