@@ -1,5 +1,5 @@
 import GoogleMapReact from "google-map-react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Typography, useMediaQuery, Paper } from "@mui/material";
 import { LocationOnOutlined } from "@mui/icons-material";
 import Rating from '@mui/material/Rating';
@@ -7,19 +7,20 @@ import Rating from '@mui/material/Rating';
 const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }) => {
   const isDesktop = useMediaQuery('(min-width:600px)');
   const mapRef = useRef();
+  const [zoom, setZoom] = useState(16);
 
   useEffect(() => {
     if (mapRef.current && coordinates.lat && coordinates.lng) {
       mapRef.current.panTo({ lat: coordinates.lat, lng: coordinates.lng });
-      mapRef.current.setZoom(16); // Set zoom level to 16 for a closer view
+      mapRef.current.setZoom(zoom); // Use the zoom state here
     }
-  }, [coordinates]);
+  }, [coordinates, zoom]);
 
   const handleApiLoaded = (map, maps) => {
     mapRef.current = map;
     if (coordinates) {
       map.setCenter(coordinates);
-      map.setZoom(16);
+      map.setZoom(zoom);
     }
   };
 
@@ -28,13 +29,13 @@ const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }
       <GoogleMapReact
         bootstrapURLKeys={{ key: 'AIzaSyDoWbRMg1iJdZv90HRrUe1fhE6pSbbthZY' }} // Replace with your actual API key
         defaultCenter={coordinates}
-        center={coordinates}
-        defaultZoom={16} // Set default zoom level to 16 for a closer view
+        defaultZoom={16} // Initial zoom level
         margin={[50, 50, 50, 50]}
         options={{}}
         onChange={(e) => {
           setCoordinates({ lat: e.center.lat, lng: e.center.lng });
           setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
+          setZoom(e.zoom); // Update the zoom state
         }}
         onChildClick={(child) => setChildClicked(child)}
         yesIWantToUseGoogleMapApiInternals
