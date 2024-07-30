@@ -10,7 +10,8 @@ import { Groups } from "./pages/groups/index";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
 import { GroupDetails } from "./pages/group-details";
 import { AddCategory } from "./pages/add-category/AddCategory";
-import { Nearby } from "./pages/nearby";
+import { Nearby } from "./pages/Nearby";
+
 
 
 function App() {
