@@ -1,6 +1,6 @@
 import GoogleMapReact from "google-map-react";
 import React, { useEffect, useRef, useState } from "react";
-import { Typography, useMediaQuery, Paper } from "@mui/material";
+import { Typography, useMediaQuery, Paper, Box } from "@mui/material";
 import { LocationOnOutlined } from "@mui/icons-material";
 import Rating from '@mui/material/Rating';
 
@@ -78,13 +78,15 @@ const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }
           console.log('Rendering place:', place.name, place.latitude, place.longitude);
 
           return (
-            <Marker
+            <Box
               key={i}
               lat={Number(place.latitude)}
               lng={Number(place.longitude)}
               place={place}
               isDesktop={isDesktop}
-            />
+            >
+                <LocationOnOutlined color="red" fontSize="30"/>
+            </Box>
           );
         })}
       </GoogleMapReact>

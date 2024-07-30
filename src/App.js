@@ -13,7 +13,7 @@ import { GroupDetails } from "./pages/group-details";
 import { AddCategory } from "./pages/add-category/AddCategory";
 import "bootstrap/dist/css/bootstrap.min.css";
 import theme from "./theme.tsx";
-import { Nearby } from "./pages/Nearby";
+import { Nearby } from "./pages/Nearby/index.js";
 import { SnackbarProvider } from "notistack";
 
 function App() {
