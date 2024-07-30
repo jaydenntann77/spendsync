@@ -5,18 +5,18 @@ import { LocationOnOutlined } from "@mui/icons-material";
 import Rating from '@mui/material/Rating';
 
 const Marker = ({ place, isDesktop }) => (
-  <div>
+  <div style={{ position: 'absolute', transform: 'translate(-50%, -100%)', zIndex: 10 }}>
     {!isDesktop ? (
       <LocationOnOutlined color="primary" fontSize="large" />
     ) : (
-      <Paper elevation={3} style={{ padding: '10px' }}>
+      <Paper elevation={3} style={{ padding: '10px', maxWidth: '150px', zIndex: 10 }}>
         <Typography variant="subtitle2" gutterBottom>
           {place.name}
         </Typography>
         <img
           src={place.photo ? place.photo.images.large.url : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHn3jT5zsWbNi1MEAlb0H4I8iOpylZ3GC9iQ&s'}
           alt={place.name}
-          style={{ width: 100 }}
+          style={{ width: '100%', height: 'auto' }}
         />
         <Rating size="small" value={Number(place.rating)} readOnly />
       </Paper>
