@@ -1,7 +1,7 @@
 import { createTheme, responsiveFontSizes } from "@mui/material";
 import { teal, amber, lime, grey, blueGrey } from "@mui/material/colors";
 
-const theme = createTheme({
+export const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {

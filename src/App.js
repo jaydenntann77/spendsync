@@ -12,7 +12,7 @@ import { useGetUserInfo } from "./hooks/useGetUserInfo";
 import { GroupDetails } from "./pages/group-details";
 import { AddCategory } from "./pages/add-category/AddCategory";
 import "bootstrap/dist/css/bootstrap.min.css";
-import theme from "./theme.tsx";
+import theme from './theme.tsx'; // Ensure this path and extension match the actual file
 import { Nearby } from "./pages/Nearby";
 import { SnackbarProvider } from "notistack";
 
