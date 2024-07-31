@@ -1,0 +1,18 @@
+[debug] [2024-07-31T19:23:49.819Z] ----------------------------------------------------------------------
+[debug] [2024-07-31T19:23:49.827Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2024-07-31T19:23:49.827Z] CLI Version:   13.10.1
+[debug] [2024-07-31T19:23:49.827Z] Platform:      darwin
+[debug] [2024-07-31T19:23:49.828Z] Node Version:  v20.13.1
+[debug] [2024-07-31T19:23:49.828Z] Time:          Thu Aug 01 2024 03:23:49 GMT+0800 (Singapore Standard Time)
+[debug] [2024-07-31T19:23:49.828Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-07-31T19:23:49.864Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-07-31T19:23:49.864Z] > authorizing via signed-in user (arqhlls88@gmail.com)
+[debug] [2024-07-31T19:23:49.864Z] [iam] checking project expense-tracker-82183 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-07-31T19:23:49.865Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/expense-tracker-82183:testIamPermissions [none]
+[debug] [2024-07-31T19:23:49.865Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/expense-tracker-82183:testIamPermissions x-goog-quota-user=projects/expense-tracker-82183
+[debug] [2024-07-31T19:23:49.865Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/expense-tracker-82183:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-07-31T19:23:51.046Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/expense-tracker-82183:testIamPermissions 200
+[debug] [2024-07-31T19:23:51.047Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/expense-tracker-82183:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-07-31T19:23:51.048Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/expense-tracker-82183/serviceAccounts/expense-tracker-82183@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-07-31T19:23:51.048Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/expense-tracker-82183/serviceAccounts/expense-tracker-82183@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
