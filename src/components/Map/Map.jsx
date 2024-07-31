@@ -1,8 +1,10 @@
 import GoogleMapReact from "google-map-react";
-import React, { useEffect, useRef, useState } from "react";
-import { Typography, useMediaQuery, Paper } from "@mui/material";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { Typography, useMediaQuery, Paper, Box } from "@mui/material";
 import { LocationOnOutlined } from "@mui/icons-material";
 import Rating from '@mui/material/Rating';
+import { IoLocation } from 'react-icons/io5';
+import _ from 'lodash';
 
 const Marker = ({ place, isDesktop }) => (
   <div>
@@ -46,6 +48,16 @@ const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }
     }
   };
 
+  const handleMapChange = useCallback(
+    _.debounce((e) => {
+      console.log('Map changed:', e);
+      setCoordinates({ lat: e.center.lat, lng: e.center.lng });
+      setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
+      setZoom(e.zoom);
+    }, 500), // Adjust debounce time as needed
+    []
+  );
+
   return (
     <div style={{ height: '85vh', width: '100%' }}>
       <GoogleMapReact
@@ -56,12 +68,7 @@ const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }
         zoom={zoom}
         margin={[50, 50, 50, 50]}
         options={{}}
-        onChange={(e) => {
-          console.log('Map changed:', e);
-          setCoordinates({ lat: e.center.lat, lng: e.center.lng });
-          setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
-          setZoom(e.zoom); // Update the zoom state
-        }}
+        onChange={handleMapChange}
         onChildClick={(child) => {
           console.log('Child clicked:', child);
           setChildClicked(child);
@@ -78,13 +85,15 @@ const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }
           console.log('Rendering place:', place.name, place.latitude, place.longitude);
 
           return (
-            <Marker
+            <Box
               key={i}
               lat={Number(place.latitude)}
               lng={Number(place.longitude)}
               place={place}
-              isDesktop={isDesktop}
-            />
+              cursor="pointer"
+            >
+              <IoLocation color="red" fontSize={30} />
+            </Box>
           );
         })}
       </GoogleMapReact>
