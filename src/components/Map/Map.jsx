@@ -4,6 +4,7 @@ import { Typography, useMediaQuery, Paper, Box } from "@mui/material";
 import { LocationOnOutlined } from "@mui/icons-material";
 import Rating from "@mui/material/Rating";
 import { IoLocation } from "react-icons/io5";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import _ from "lodash";
 
 const Marker = ({ place, isDesktop }) => (
@@ -75,8 +76,8 @@ const Map = ({
         <div style={{ height: "85vh", width: "100%" }}>
             <GoogleMapReact
                 bootstrapURLKeys={{
-                    key: "AIzaSyDoWbRMg1iJdZv90HRrUe1fhE6pSbbthZY",
-                }} // Replace with your actual API key
+                    key: "YOUR_GOOGLE_MAPS_API_KEY",
+                }}
                 defaultCenter={{
                     lat: coordinates?.lat ? coordinates.lat : 0,
                     lng: coordinates?.lng ? coordinates.lng : 0,
@@ -119,10 +120,19 @@ const Map = ({
                             place={place}
                             cursor="pointer"
                         >
-                            <IoLocation color="red" fontSize={50} />
+                            <IoLocation color="red" fontSize={30} />
                         </Box>
                     );
                 })}
+                {coordinates.lat && coordinates.lng && (
+                    <Box
+                        lat={coordinates.lat}
+                        lng={coordinates.lng}
+                        cursor="pointer"
+                    >
+                        <FaMapMarkerAlt color="blue" fontSize={30} />
+                    </Box>
+                )}
             </GoogleMapReact>
         </div>
     );
