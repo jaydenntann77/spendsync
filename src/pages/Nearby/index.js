@@ -31,6 +31,7 @@ const haversineDistance = (coords1, coords2) => {
 
 export const Nearby = () => {
     const [places, setPlaces] = useState([]);
+    const [rating, setRating] = useState("");
     const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
     const [bounds, setBounds] = useState(null);
     const [childClicked, setChildClicked] = useState(null);
@@ -78,6 +79,7 @@ export const Nearby = () => {
                         places={places}
                         childClicked={childClicked}
                         isLoading={isLoading}
+                        setRating={setRating}
                     />
                 </Grid>
                 <Grid item xs={12} md={8}>
