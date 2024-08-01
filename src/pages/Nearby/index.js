@@ -48,7 +48,7 @@ export const Nearby = () => {
     }, []);
 
     useEffect(() => {
-      const filtered = places.filter((place) => place.rating > rating);
+      const filtered = places.filter((place) => place.rating > rating && place.num_reviews > 0);
       setFilteredPlaces(filtered);
     }, [rating, places]);
 
