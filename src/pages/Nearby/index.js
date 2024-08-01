@@ -36,6 +36,8 @@ export const Nearby = () => {
     const [bounds, setBounds] = useState(null);
     const [childClicked, setChildClicked] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [type, setType] = useState('restaurants');
+    const [filteredPlaces, setFilteredPlaces] = useState([])
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
@@ -46,9 +48,14 @@ export const Nearby = () => {
     }, []);
 
     useEffect(() => {
+      const filtered = places.filter((place) => place.rating > rating);
+      setFilteredPlaces(filtered);
+    }, [rating, places]);
+
+    useEffect(() => {
         if (bounds) {
             setIsLoading(true);
-            getPlacesData(bounds.ne, bounds.sw)
+            getPlacesData(type, bounds.ne, bounds.sw)
                 .then((data) => {
                     const placesWithDistance = data.map((place) => ({
                         ...place,
@@ -62,13 +69,14 @@ export const Nearby = () => {
                             (a, b) => a.distance - b.distance
                         )
                     );
+                    setFilteredPlaces([]); // Reset filtered places when new data is fetched
                     setIsLoading(false);
                 })
                 .catch((error) => {
                     console.error("Error fetching places data: ", error);
                 });
         }
-    }, [bounds, coordinates]);
+    }, [type, bounds, coordinates]);
 
     return (
         <>
@@ -76,9 +84,12 @@ export const Nearby = () => {
             <Grid container spacing={3} style={{ width: "100%" }}>
                 <Grid item xs={12} md={4}>
                     <List
-                        places={places}
+                        places={filteredPlaces.length ? filteredPlaces : places}
                         childClicked={childClicked}
                         isLoading={isLoading}
+                        type={type}
+                        setType={setType}
+                        rating={rating}
                         setRating={setRating}
                     />
                 </Grid>
@@ -87,7 +98,7 @@ export const Nearby = () => {
                         setCoordinates={setCoordinates}
                         setBounds={setBounds}
                         coordinates={coordinates}
-                        places={places}
+                        places={filteredPlaces.length ? filteredPlaces : places}
                         setChildClicked={setChildClicked}
                     />
                 </Grid>

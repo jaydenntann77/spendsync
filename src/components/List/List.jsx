@@ -22,8 +22,11 @@ export const List = ({
     const [elRefs, setElRefs] = useState([]);
 
     useEffect(() => {
-        const refs = Array(places?.length).fill().map((_,i) => refs[i] || createRef());
-        setElRefs(refs);
+        setElRefs((elRefs) => 
+            Array(places?.length)
+                .fill()
+                .map((_, i) => elRefs[i] || createRef())
+        );
     }, [places]);
 
     return (

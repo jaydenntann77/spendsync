@@ -130,7 +130,7 @@ const Map = ({
             lng={coordinates.lng}
             cursor="pointer"
           >
-            <FaMapMarkerAlt color="blue" fontSize={30} />
+            <IoLocation color="blue" fontSize={30} />
           </Box>
         )}
       </GoogleMapReact>
