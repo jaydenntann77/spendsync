@@ -26,7 +26,6 @@ function App() {
                     style={{
                         backgroundColor: theme.palette.background.default,
                         color: theme.palette.text.primary,
-                        // Removed marginLeft to fill entire page
                     }}
                 >
                     <Router>

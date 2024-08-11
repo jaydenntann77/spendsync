@@ -4,6 +4,7 @@
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  flex-direction: column; /* Adjust flex direction to column for mobile */
 }
 
 .content {
@@ -11,7 +12,73 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  width: 100%; /* Ensure the content takes full width */
-  margin-left: 0; /* Remove any leftover margin */
+  width: 100%; 
+  margin-left: 0; 
 }
 
+/* Taskbar styles for mobile devices */
+@media (max-width: 600px) {
+  .Taskbar {
+    display: block; /* Ensure Taskbar is visible on mobile */
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: #282c34; /* Match your Taskbar background color */
+  }
+
+  .content {
+    margin-top: 50px; /* Adjust content positioning based on Taskbar height */
+  }
+}
+
+@media (min-width: 601px) {
+  .App {
+    flex-direction: row; /* Flex direction as row for desktop */
+  }
+
+  .Taskbar {
+    width: 200px; /* Adjust Taskbar width for desktop */
+    position: relative;
+  }
+
+  .content {
+    margin-left: 200px; /* Adjust margin-left for desktop */
+  }
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
