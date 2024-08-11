@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { CssBaseline, Grid } from "@mui/material";
+import { CssBaseline, Grid, Box } from "@mui/material"; // Added Box for potential styling
 import { getPlacesData } from "../../api";
 import { List } from "../../components/List/List";
 import Map from "../../components/Map/Map";
@@ -81,28 +81,31 @@ export const Nearby = () => {
     return (
         <>
             <CssBaseline />
-            <Grid container spacing={3} style={{ width: "100%" }}>
-                <Grid item xs={12} md={4}>
-                    <List
-                        places={filteredPlaces.length ? filteredPlaces : places}
-                        childClicked={childClicked}
-                        isLoading={isLoading}
-                        type={type}
-                        setType={setType}
-                        rating={rating}
-                        setRating={setRating}
-                    />
+            {/* Wrap content in a responsive Box to handle padding and margin */}
+            <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 3, md: 4 }, width: '100%' }}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={4}>
+                        <List
+                            places={filteredPlaces.length ? filteredPlaces : places}
+                            childClicked={childClicked}
+                            isLoading={isLoading}
+                            type={type}
+                            setType={setType}
+                            rating={rating}
+                            setRating={setRating}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={8}>
+                        <Map
+                            setCoordinates={setCoordinates}
+                            setBounds={setBounds}
+                            coordinates={coordinates}
+                            places={filteredPlaces.length ? filteredPlaces : places}
+                            setChildClicked={setChildClicked}
+                        />
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} md={8}>
-                    <Map
-                        setCoordinates={setCoordinates}
-                        setBounds={setBounds}
-                        coordinates={coordinates}
-                        places={filteredPlaces.length ? filteredPlaces : places}
-                        setChildClicked={setChildClicked}
-                    />
-                </Grid>
-            </Grid>
+            </Box>
         </>
     );
 };

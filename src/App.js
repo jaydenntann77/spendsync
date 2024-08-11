@@ -1,4 +1,3 @@
-// src/App.js
 import "./App.css";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -27,6 +26,7 @@ function App() {
                     style={{
                         backgroundColor: theme.palette.background.default,
                         color: theme.palette.text.primary,
+                        // Removed marginLeft to fill entire page
                     }}
                 >
                     <Router>
@@ -37,10 +37,11 @@ function App() {
                                 height: "100%",
                             }}
                         >
+                            {/* Remove Taskbar if not needed */}
                             {isAuth && <Taskbar />}
                             <div
                                 className="content"
-                                style={{ marginLeft: isAuth ? "200px" : "0" }}
+                                style={{ marginLeft: "0" }} // Remove the margin completely
                             >
                                 <Routes>
                                     <Route path="/" exact element={<Auth />} />

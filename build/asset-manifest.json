@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0b9ae645.css",
+    "main.js": "/static/js/main.e97e2ac0.js",
+    "static/js/453.588ecfcc.chunk.js": "/static/js/453.588ecfcc.chunk.js",
+    "static/media/pexels-codioful-6985003.jpg": "/static/media/pexels-codioful-6985003.d53302912d9fc941c560.jpg",
+    "index.html": "/index.html",
+    "main.0b9ae645.css.map": "/static/css/main.0b9ae645.css.map",
+    "main.e97e2ac0.js.map": "/static/js/main.e97e2ac0.js.map",
+    "453.588ecfcc.chunk.js.map": "/static/js/453.588ecfcc.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0b9ae645.css",
+    "static/js/main.e97e2ac0.js"
+  ]
+}
