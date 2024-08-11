@@ -122,49 +122,7 @@ export const Taskbar = () => {
                 </div>
             </nav>
 
-            {/* Sidebar for mobile */}
-            <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-                <ul>
-                    <li>
-                        <NavLink
-                            exact
-                            to="/expense-tracker"
-                            onClick={toggleSidebar}
-                        >
-                            Dashboard
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/add-transaction"
-                            onClick={toggleSidebar}
-                        >
-                            Add Transaction
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/groups"
-                            onClick={toggleSidebar}
-                        >
-                            Groups
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/nearby"
-                            onClick={toggleSidebar}
-                        >
-                            Nearby
-                        </NavLink>
-                    </li>
-                    <li>
-                        <button onClick={signUserOut}>
-                            Sign Out
-                        </button>
-                    </li>
-                </ul>
-            </div>
+            
         </>
     );
 };
